@@ -8,6 +8,8 @@ function ChessGame() {
   const [position, setPosition] = useState('start');
   const [game, setGame] = useState(new Chess());
   const [turn, setTurn] = useState(game.turn());
+  let [color, setColor] = useState('w')
+  let [draggable, setDraggable] = useState(true);
   
   const makeMove = (move) => {
       game.move(move);
@@ -34,6 +36,19 @@ function ChessGame() {
       };
 
     }
+
+  function areDraggable () {
+    console.log(color, turn)
+    if(color == turn) {
+        setDraggable(true)
+    } else {
+        setDraggable(false)
+    }
+  }
+
+  useEffect(() => {
+      areDraggable();
+  }, [turn, color])
   
   return (
     <div>
