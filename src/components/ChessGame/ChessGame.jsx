@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
-import './ChessGame.css'
+
 
 function ChessGame() {
   const [position, setPosition] = useState('start');
@@ -68,4 +68,4 @@ function ChessGame() {
   );
 }
 
-export default TemplateFunction;
+export default ChessGame;
