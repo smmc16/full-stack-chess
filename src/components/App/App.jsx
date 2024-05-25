@@ -8,6 +8,8 @@ import {
 
 import { useDispatch, useSelector } from 'react-redux';
 
+import { io } from "socket.io-client";
+
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 
@@ -111,7 +113,11 @@ function App() {
             }
           </Route>
           <Route path="/game">
+            {user.id ? 
             <ChessGame />
+            :
+            <LoginPage />}
+            
           </Route>
 
           {/* If none of the other routes matched, we will show a 404. */}
