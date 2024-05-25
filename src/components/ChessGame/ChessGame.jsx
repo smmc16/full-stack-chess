@@ -37,7 +37,18 @@ function ChessGame() {
   
   return (
     <div>
-      
+      <Chessboard id="board"
+        boardWidth={500}
+        position={position} 
+        onPieceDrop={onDrop}
+        arePiecesDraggable={draggable}
+        autoPromoteToQueen={true} 
+        boardOrientation={color === 'w' ? 'white' : 'black'} 
+        customBoardStyle={{ borderRadius: '5px', boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5 )'}} 
+        customDarkSquareStyle={{backgroundColor: '#4b464f'}}
+        customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
+        
+        />
     </div>
   );
 }
