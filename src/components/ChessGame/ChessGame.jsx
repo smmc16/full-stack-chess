@@ -4,7 +4,7 @@ import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
 
 
-function ChessGame() {
+function ChessGame({socket}) {
   const [position, setPosition] = useState('start');
   const [game, setGame] = useState(new Chess());
   const [turn, setTurn] = useState(game.turn());
@@ -49,6 +49,11 @@ function ChessGame() {
   useEffect(() => {
       areDraggable();
   }, [turn, color])
+
+  socket.on('makeMove', (move) => {
+    onDrop(move.from, move.to);
+    setPosition(game.fen());
+})
   
   return (
     <div>

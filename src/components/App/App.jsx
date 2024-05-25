@@ -17,13 +17,15 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
-import InfoPage from '../InfoPage/InfoPage';
+import Menu from '../Menu/Menu';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import ChessGame from '../ChessGame/ChessGame';
 
 import './App.css';
+
+const socket = io('http://localhost:5002');
 
 function App() {
   const dispatch = useDispatch();
@@ -66,9 +68,9 @@ function App() {
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
-            path="/info"
+            path="/menu"
           >
-            <InfoPage />
+            <Menu />
           </ProtectedRoute>
 
           <Route
@@ -114,7 +116,7 @@ function App() {
           </Route>
           <Route path="/game">
             {user.id ? 
-            <ChessGame />
+            <ChessGame socket={socket}/>
             :
             <LoginPage />}
             
