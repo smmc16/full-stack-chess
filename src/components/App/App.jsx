@@ -25,6 +25,8 @@ import ChessGame from '../ChessGame/ChessGame';
 
 import './App.css';
 
+const socket = io('http://localhost:5002');
+
 function App() {
   const dispatch = useDispatch();
 
@@ -114,7 +116,7 @@ function App() {
           </Route>
           <Route path="/game">
             {user.id ? 
-            <ChessGame />
+            <ChessGame socket={socket}/>
             :
             <LoginPage />}
             
