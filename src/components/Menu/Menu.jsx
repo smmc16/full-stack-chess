@@ -26,6 +26,10 @@ function Menu() {
   }
 
   useEffect(() => {
+    dispatch({type: 'FETCH_ROOMS'});
+  }, [])
+
+  useEffect(() => {
     checkRooms()
   }, [enterRoomID])
 
@@ -39,26 +43,30 @@ function Menu() {
         }).catch(error => {
           console.log('Error in PUT /secondplayer', error);
         })
-        return console.log('added second player');
+        console.log('added second player');
+        return setEnterRoomID('');
       } else if(room.room_id === enterRoomID && room.black) {
           alert('This room is full');
-          return;
+          return setEnterRoomID('');
+      } else if (enterRoomID.trim().length == 0) {
+        alert('Please enter a room id')
+        return setEnterRoomID('');
       } else if (checkedRoom) {
         axios.post('/api/game/firstplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
         }).catch(error => {
           console.log('Error in POST /firstplayer', error);
         })
-        return console.log('added room');
+        console.log('added room')
+        return setEnterRoomID('');
       }
     }
-
     
   }
 
   return (
     <div className="container">
-      <input onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
+      <input value={enterRoomID} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
       <button onClick={joinRoomBtn}>Join Room</button>
     </div>
   );
