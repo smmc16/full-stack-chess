@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
@@ -13,34 +13,48 @@ function Menu() {
     roomID: enterRoomID
   }
 
+  let checkedRoom = '';
+
   function checkRooms() {
     for(let room of rooms) {
-      if (enterRoomID === rooms.room_id) {
-        return false
+      if (enterRoomID === room.room_id) {
+        checkedRoom = false;
+        console.log('room exists');
+        return;
+      } else { 
+        checkedRoom = true;
+        console.log('room doesnt exist');
       }
     }
-    return true;
+    console.log(checkedRoom);
   }
 
-  function joinRoomBtn() {
+  useEffect(() => {
     dispatch({type: 'FETCH_ROOMS'})
-    console.log(rooms)
+    checkRooms()
+  }, [enterRoomID])
 
+  function joinRoomBtn() {
+    dispatch({type: 'FETCH_ROOMS'});
+    console.log(rooms);
     for(let room of rooms) {
       if (room.room_id === enterRoomID && room.black === null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
-
+          console.log('added second player')
         }).catch(error => {
           console.log('Error in PUT /secondplayer', error);
         })
+        return;
       } else if(room.room_id === enterRoomID && room.black) {
           alert('This room is full');
-      } else if (checkRooms) {
+          return;
+      } else if (checkedRoom) {
         axios.post('/api/game/firstplayer', gameObject).then((response) => {
-
+          console.log('added room')
         }).catch(error => {
           console.log('Error in POST /firstplayer', error);
         })
+        return;
       }
     }
 
