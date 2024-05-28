@@ -46,4 +46,18 @@ router.put('/secondplayer', (req, res) => {
   });
 });
 
+router.get('/userRooms/:id', (req, res) => {
+  queryText = `
+  SELECT * FROM "games" WHERE "black" = $1 OR "white" = $1;
+  `
+  pool.query(queryText, [req.params.id])
+  .then((dbRes) => {
+    res.send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error getting rooms`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
 module.exports = router;
