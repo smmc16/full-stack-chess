@@ -114,7 +114,7 @@ function App() {
               <LandingPage />
             }
           </Route>
-          <Route path="/game">
+          <Route path="/game/:id">
             {user.id ? 
             <ChessGame socket={socket}/>
             :
