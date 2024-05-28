@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 function Menu() {
   const dispatch = useDispatch();
@@ -31,6 +33,7 @@ function Menu() {
 // useEffect to update the rooms store
   useEffect(() => {
     dispatch({type: 'FETCH_ROOMS'});
+    getUserRooms();
   }, [])
 
 // check enterRoomID everytime it changes
@@ -46,6 +49,7 @@ function Menu() {
       if (room.room_id === enterRoomID && room.black == null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
+          getUserRooms();
         }).catch(error => {
           console.log('Error in PUT /secondplayer', error);
         })
@@ -66,22 +70,37 @@ function Menu() {
       else if (checkedRoom) {
         axios.post('/api/game/firstplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
+          getUserRooms();
         }).catch(error => {
           console.log('Error in POST /firstplayer', error);
         })
         console.log('added room')
         return setEnterRoomID('');
       }
-    }
-    
+    }  
+  }
+
+  let userRooms = [];
+  function getUserRooms() {
+    axios.get(`/api/game/userRooms/${user.id}`).then((response) => {
+      userRooms = response.data
+      console.log(userRooms)
+    }).catch(error => {
+      console.log('Error in GET /userRooms', error);
+    })
   }
 
   return (
     <div className="container">
-      <input value={enterRoomID} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
-      <button onClick={joinRoomBtn}>Join Room</button>
-
-      
+      <form onSubmit={joinRoomBtn}>
+        <input value={enterRoomID} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
+        <input type='submit' value='Join Room' />
+      </form>
+      <ul>
+      {userRooms.map((room) => 
+        <li>{room.id}</li>
+      )}
+      </ul>
     </div>
   );
 }
