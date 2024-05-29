@@ -47,12 +47,12 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (room) => {
     console.log('room joined', room)
     socket.join(room);
-});
+  });
 
   socket.on('makeMove', (move, id) => {
     console.log('move made', move, id)
     socket.to(id).emit('makeMove', move);
-  })
+  });
 
   socket.on('disconnect', () => {
       console.log('User disconnected');
