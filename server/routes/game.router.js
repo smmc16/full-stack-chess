@@ -60,4 +60,19 @@ router.get('/userRooms/:id', (req, res) => {
   });
 });
 
+router.put('/position/:id', (req, res) => {
+  queryText = `
+  UPDATE "games" SET "position" = $1 WHERE "id" = $2;
+  `
+  queryValues = [req.body.position, req.params.id]
+  pool.query(queryText, queryValues)
+  .then((dbRes) => {
+    res.sendStatus(201);
+  })
+  .catch((dbErr) => {
+    console.log(`Error adding new room`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
 module.exports = router;

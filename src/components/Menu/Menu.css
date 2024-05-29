@@ -1,0 +1,19 @@
+.container {
+    text-align: center;
+}
+
+#rooms {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.room {
+    margin: 10px;
+    width: 130px;
+    text-align: center;
+}
+
+.room:hover {
+    cursor: pointer;
+    background-color: aliceblue;
+}

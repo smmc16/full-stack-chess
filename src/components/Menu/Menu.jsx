@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { Chessboard } from 'react-chessboard';
+import './Menu.css';
 
 function Menu() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector((store) => store.user);
   const rooms = useSelector((store) => store.rooms);
   let [enterRoomID, setEnterRoomID] = useState('');
@@ -80,14 +84,18 @@ function Menu() {
     }  
   }
 
-  let userRooms = [];
+  let [userRooms, setUserRooms] = useState([]);
   function getUserRooms() {
     axios.get(`/api/game/userRooms/${user.id}`).then((response) => {
-      userRooms = response.data
+      setUserRooms(response.data);
       console.log(userRooms)
     }).catch(error => {
       console.log('Error in GET /userRooms', error);
     })
+  }
+
+  function roomBtn(id) {
+    history.push(`/game/${id}`)
   }
 
   return (
@@ -96,11 +104,16 @@ function Menu() {
         <input value={enterRoomID} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
         <input type='submit' value='Join Room' />
       </form>
-      <ul>
+      <div id='rooms'>
       {userRooms.map((room) => 
-        <li>{room.id}</li>
+        <Card onClick={() => roomBtn(room.id)} className='room'>
+          <CardContent>
+            <Chessboard position={room.position} boardWidth={100} arePiecesDraggable={false} />
+            <h4>{room.room_id}</h4>
+          </CardContent>
+        </Card>
       )}
-      </ul>
+      </div>
     </div>
   );
 }
