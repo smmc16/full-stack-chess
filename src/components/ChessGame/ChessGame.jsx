@@ -14,12 +14,16 @@ function ChessGame({socket}) {
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
   
+  useEffect(() => {
+    socket.emit('joinRoom', id)
+  }, [])
+
   const makeMove = (move) => {
       game.move(move);
       setGame(new Chess(game.fen()));
       setTurn(game.turn());
     }
-    let positionObject = {
+  let positionObject = {
       position
     }
   function putPosition() {
