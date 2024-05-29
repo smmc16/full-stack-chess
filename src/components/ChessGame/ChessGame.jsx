@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 
 function ChessGame({socket}) {
@@ -10,12 +12,24 @@ function ChessGame({socket}) {
   const [turn, setTurn] = useState(game.turn());
   let [color, setColor] = useState('w')
   let [draggable, setDraggable] = useState(true);
+  const { id } = useParams();
   
   const makeMove = (move) => {
       game.move(move);
       setGame(new Chess(game.fen()));
       setTurn(game.turn());
     }
+    let positionObject = {
+      position
+    }
+  function putPosition() {
+    console.log(position)
+    axios.put(`/api/game/position/${id}`, positionObject).then((response) => {
+
+    }).catch(error => {
+      console.log('Error in PUT /position', error);
+    })
+  }
 
   function onDrop(sourceSquare, targetSquare) {
       const movePiece = makeMove({
@@ -29,10 +43,9 @@ function ChessGame({socket}) {
           promotion: "q", 
       };
       setPosition(game.fen());
-        
       if (movePiece === null) {return false}
       else { 
-          socket.emit('makeMove', move, roomID);
+          socket.emit('makeMove', move, id);
       };
 
     }
@@ -48,6 +61,8 @@ function ChessGame({socket}) {
 
   useEffect(() => {
       areDraggable();
+      console.log(position)
+      putPosition()
   }, [turn, color])
 
   socket.on('makeMove', (move) => {
