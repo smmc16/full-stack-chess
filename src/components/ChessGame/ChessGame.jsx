@@ -19,8 +19,25 @@ function ChessGame({socket}) {
   
   useEffect(() => {
     socket.emit('joinRoom', id);
-    dispatch({type: 'FETCH_ROOM', payload: id})
+    dispatch({type: 'FETCH_ROOM', payload: id});
   }, [])
+
+  useEffect(() => {
+    if(room.length === 1) {
+    setPlayerColor();
+    setPosition(room[0].position)
+    }
+  }, [room])
+
+  function setPlayerColor() {
+    if(user.id === room[0].white) {
+      setColor('w');
+    } else if (user.id === room[0].black) {
+      setColor('b');
+    } else {
+      setDraggable(false);
+    }
+  }
 
   const makeMove = (move) => {
       game.move(move);
@@ -71,7 +88,7 @@ function ChessGame({socket}) {
       areDraggable();
       console.log(position)
       putPosition()
-  }, [turn, color])
+  }, [turn])
 
   socket.on('makeMove', (move) => {
     onDrop(move.from, move.to);
