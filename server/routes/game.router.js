@@ -8,7 +8,7 @@ router.get('/rooms', (req, res) => {
   `
   pool.query(queryText)
   .then((dbRes) => {
-    res.send(dbRes.rows);
+    res.status(200).send(dbRes.rows);
   })
   .catch((dbErr) => {
     console.log(`Error getting rooms`, dbErr);
@@ -16,9 +16,23 @@ router.get('/rooms', (req, res) => {
   });
 });
 
+router.get('/room/:id', (req, res) => {
+  queryText = `
+  SELECT * FROM "games" WHERE "id" = $1;
+  `
+  pool.query(queryText, [req.params.id])
+  .then((dbRes) => {
+    res.status(200).send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error getting room`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
 router.post('/firstplayer', (req, res) => {
   queryText = `
-  INSERT INTO "games" (room_id, white) VALUES ($1, $2);
+  INSERT INTO "games" (room_id, black) VALUES ($1, $2);
   `
   queryValues = [req.body.roomID, req.body.player]
   pool.query(queryText, queryValues)
@@ -33,7 +47,7 @@ router.post('/firstplayer', (req, res) => {
 
 router.put('/secondplayer', (req, res) => {
   queryText = `
-  UPDATE "games" SET "black" = $1 WHERE "room_id" = $2;
+  UPDATE "games" SET "white" = $1 WHERE "room_id" = $2;
   `
   queryValues = [req.body.player, req.body.roomID]
   pool.query(queryText, queryValues)
@@ -62,9 +76,9 @@ router.get('/userRooms/:id', (req, res) => {
 
 router.put('/position/:id', (req, res) => {
   queryText = `
-  UPDATE "games" SET "position" = $1 WHERE "id" = $2;
+  UPDATE "games" SET "position" = $1, "pgn" = $2 WHERE "id" = $3;
   `
-  queryValues = [req.body.position, req.params.id]
+  queryValues = [req.body.position, req.body.pgn, req.params.id]
   pool.query(queryText, queryValues)
   .then((dbRes) => {
     res.sendStatus(201);

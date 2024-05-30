@@ -50,7 +50,7 @@ function Menu() {
     console.log(rooms);
     for(let room of rooms) {
       // if a room exists and has no second player, update the db to add the ssecond player
-      if (room.room_id === enterRoomID && room.black == null) {
+      if (room.room_id === enterRoomID && room.white == null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
           getUserRooms();
@@ -61,7 +61,7 @@ function Menu() {
         return setEnterRoomID('');
       } 
       // checking if a second player is already in the room
-      else if(room.room_id === enterRoomID && room.black) {
+      else if(room.room_id === enterRoomID && room.white) {
           alert('This room is full');
           return setEnterRoomID('');
       } 

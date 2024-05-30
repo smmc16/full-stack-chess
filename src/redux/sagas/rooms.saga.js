@@ -7,13 +7,13 @@ function* fetchRooms() {
         console.log(response);
         yield put({type: 'SET_ROOMS', payload: response.data})
     } catch (error) {
-        console.log('Room get request failed', error);
+        console.log('Rooms get request failed', error);
     }
 };
 
-function* roomSaga() {
+function* roomsSaga() {
     yield takeLatest('FETCH_ROOMS', fetchRooms);
 };
 
-export default roomSaga;
+export default roomsSaga;
 
