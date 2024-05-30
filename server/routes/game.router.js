@@ -8,10 +8,24 @@ router.get('/rooms', (req, res) => {
   `
   pool.query(queryText)
   .then((dbRes) => {
-    res.send(dbRes.rows);
+    res.status(200).send(dbRes.rows);
   })
   .catch((dbErr) => {
     console.log(`Error getting rooms`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
+router.get('/room/:id', (req, res) => {
+  queryText = `
+  SELECT * FROM "games" WHERE "id" = $1;
+  `
+  pool.query(queryText, [req.params.id])
+  .then((dbRes) => {
+    res.status(200).send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error getting room`, dbErr);
     res.sendStatus(500);
   });
 });

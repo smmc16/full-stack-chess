@@ -7,15 +7,19 @@ import axios from 'axios';
 
 
 function ChessGame({socket}) {
-  const [position, setPosition] = useState('start');
-  const [game, setGame] = useState(new Chess());
-  const [turn, setTurn] = useState(game.turn());
+  const dispatch = useDispatch();
+  const user = useSelector(store => store.user); 
+  const room = useSelector(store => store.room);
+  let [position, setPosition] = useState('start');
+  let [game, setGame] = useState(new Chess());
+  let [turn, setTurn] = useState(game.turn());
   let [color, setColor] = useState('w')
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
   
   useEffect(() => {
-    socket.emit('joinRoom', id)
+    socket.emit('joinRoom', id);
+    dispatch({type: 'FETCH_ROOM', payload: id})
   }, [])
 
   const makeMove = (move) => {
