@@ -62,7 +62,7 @@ router.put('/secondplayer', (req, res) => {
 
 router.get('/userRooms/:id', (req, res) => {
   queryText = `
-  SELECT * FROM "games" WHERE "black" = $1 OR "white" = $1;
+  SELECT * FROM "games" WHERE "black" = $1 OR "white" = $1 ORDER BY "id";
   `
   pool.query(queryText, [req.params.id])
   .then((dbRes) => {
