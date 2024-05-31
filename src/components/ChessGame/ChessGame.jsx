@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-
 
 function ChessGame({socket}) {
   const dispatch = useDispatch();
@@ -16,12 +15,19 @@ function ChessGame({socket}) {
   let [color, setColor] = useState('w')
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
-  let pgn;
+  let [pgn, setPgn] = useState();
 
   useEffect(() => {
     socket.emit('joinRoom', id);
     dispatch({type: 'FETCH_ROOM', payload: id});
+    
   }, []);
+
+  useEffect(() => {
+    if(pgn) {
+    setUpBoard()
+    }
+  }, [pgn])
 
   function setUpBoard () {
     console.log(pgn)
@@ -37,8 +43,8 @@ function ChessGame({socket}) {
       if(room[0].position !== 'start') {
         setGame(new Chess(room[0].position))
         setTurn(position.split(' ')[1])
-        pgn = room[0].pgn;
-        setUpBoard();
+        setPgn(room[0].pgn);
+        
       }
     } 
     
@@ -60,7 +66,7 @@ function ChessGame({socket}) {
       setGame(new Chess(game.fen()));
       setTurn(game.turn());
       setPosition(game.fen())
-      pgn = game.pgn();
+      setPgn(game.pgn());
     };
 
   function onDrop(sourceSquare, targetSquare) {
@@ -75,10 +81,10 @@ function ChessGame({socket}) {
           promotion: "q", 
       };
       setPosition(game.fen())
-      if (movePiece === null) {return false}
-      else { 
+      // if (movePiece === null) {return false}
+      // else { 
           socket.emit('makeMove', move, id);
-      };
+      // };
       console.log(position);
       console.log(pgn);
     }
@@ -118,7 +124,9 @@ function ChessGame({socket}) {
 
   // Watch for position change to update database
   useEffect(() => {
+    if (position !== "start") {
     putPosition();
+    }
   }, [position]);
   
   return (

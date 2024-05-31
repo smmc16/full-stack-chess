@@ -108,7 +108,11 @@ function Menu() {
       {userRooms.map((room) => 
         <Card onClick={() => roomBtn(room.id)} className='room' key={room.id}>
           <CardContent>
-            <Chessboard position={room.position} boardWidth={100} arePiecesDraggable={false} />
+            <Chessboard 
+            position={room.position} 
+            boardWidth={100} 
+            arePiecesDraggable={false}
+            boardOrientation={user.id === room.white ? 'white' : 'black'} />
             <h4>{room.room_id}</h4>
           </CardContent>
         </Card>
