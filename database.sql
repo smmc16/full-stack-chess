@@ -12,10 +12,12 @@ CREATE TABLE "games" (
 	"id" SERIAL PRIMARY KEY,
 	"created" DATE DEFAULT CURRENT_DATE,
 	"in_progress" BOOLEAN DEFAULT TRUE,
-	"room_id" VARCHAR (80),
+	"room_id" VARCHAR (80) UNIQUE NOT NULL,
 	"white" INT REFERENCES "user",
 	"black" INT REFERENCES "user",
 	"position" VARCHAR(1000) DEFAULT 'start',
+	"pgn" VARCHAR(2000),
 	"winner" INT REFERENCES "user"
 	);
-	
+    
+INSERT INTO "games" (room_id, black) VALUES ('room', 1);
