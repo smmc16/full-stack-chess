@@ -4,6 +4,7 @@ import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import './ChessGame.css';
 
 function ChessGame({socket}) {
   const dispatch = useDispatch();
@@ -20,37 +21,36 @@ function ChessGame({socket}) {
   useEffect(() => {
     socket.emit('joinRoom', id);
     dispatch({type: 'FETCH_ROOM', payload: id});
-    
-  }, []);
+  }, [id]);
 
-  useEffect(() => {
-    if(pgn) {
-    setUpBoard()
-    }
-  }, [pgn])
-
+  // Loads PGN once the pgn variable has been updated
   function setUpBoard () {
     console.log(pgn)
     game.loadPgn(pgn)
   };
 
+  useEffect(() => {
+    if(pgn) {
+      setUpBoard()
+    }
+  }, [pgn])
+
   // Update variables once the room saga has loaded
   useEffect(() => {
     if(room.length === 1) {
     setPlayerColor();
-    setPosition(room[0].position);
-
+    setPgn(room[0].pgn)
       if(room[0].position !== 'start') {
-        setGame(new Chess(room[0].position))
-        setTurn(position.split(' ')[1])
-        setPgn(room[0].pgn);
-        
+        setGame(new Chess(room[0].position));
+        setPosition(room[0].position)
+        setTurn(game.turn())
+        console.log(game)
       }
     } 
     
   }, [room]);
 
-  // Set player color from the database
+  // Sets player color from the database
   function setPlayerColor() {
     if(user.id === room[0].black) {
       setColor('b');
@@ -61,14 +61,16 @@ function ChessGame({socket}) {
     }
   };
 
+  // Updates game on player move
   const makeMove = (move) => {
       game.move(move);
       setGame(new Chess(game.fen()));
       setTurn(game.turn());
-      setPosition(game.fen())
       setPgn(game.pgn());
+      
     };
 
+  // for onPieceDrop prop in chessboard, emits to makeMove socket
   function onDrop(sourceSquare, targetSquare) {
       const movePiece = makeMove({
           from: sourceSquare,
@@ -80,13 +82,13 @@ function ChessGame({socket}) {
           to: targetSquare,
           promotion: "q", 
       };
-      setPosition(game.fen())
-      // if (movePiece === null) {return false}
-      // else { 
+      setPosition(game.fen());
+      putPosition()
+      if (movePiece === null) {return false}
+      else { 
           socket.emit('makeMove', move, id);
-      // };
-      console.log(position);
-      console.log(pgn);
+          return true;
+      };
     }
 
   // Controls whether the pieces are draggable based on whos turn it is
@@ -121,16 +123,10 @@ function ChessGame({socket}) {
       console.log('Error in PUT /position', error);
     })
   };
-
-  // Watch for position change to update database
-  useEffect(() => {
-    if (position !== "start") {
-    putPosition();
-    }
-  }, [position]);
   
   return (
-    <div>
+    <div id="page">
+      {room.length === 1 ? <h2>{room[0].room_id}</h2> : <h2></h2>}
       <Chessboard id="board"
         boardWidth={500}
         position={position} 

@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import { Chessboard } from 'react-chessboard';
 import './Menu.css';
 
-function Menu() {
+function Menu({socket}) {
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector((store) => store.user);
@@ -38,6 +38,7 @@ function Menu() {
   useEffect(() => {
     dispatch({type: 'FETCH_ROOMS'});
     getUserRooms();
+    socket.emit('leaveRoom')
   }, [])
 
 // check enterRoomID everytime it changes
@@ -49,7 +50,7 @@ function Menu() {
     dispatch({type: 'FETCH_ROOMS'});
     console.log(rooms);
     for(let room of rooms) {
-      // if a room exists and has no second player, update the db to add the ssecond player
+      // if a room exists and has no second player, update the db to add the second player
       if (room.room_id === enterRoomID && room.white == null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
@@ -96,6 +97,7 @@ function Menu() {
 
   function roomBtn(id) {
     history.push(`/game/${id}`)
+    
   }
 
   return (
