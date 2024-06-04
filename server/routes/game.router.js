@@ -22,7 +22,13 @@ router.get('/room/:id', (req, res) => {
   `
   pool.query(queryText, [req.params.id])
   .then((dbRes) => {
-    res.status(200).send(dbRes.rows);
+    if(dbRes.rows.length > 0) {
+      res.status(200).send(dbRes.rows[0]);
+    } else {
+      // room not found
+      res.sendStatus(500);
+    }
+    
   })
   .catch((dbErr) => {
     console.log(`Error getting room`, dbErr);
