@@ -17,36 +17,19 @@ function ChessGame({socket}) {
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
   const history = useHistory();
-  let [pgn, setPgn] = useState();
   let [didLoad, setDidLoad] = useState(false);
-  let [didLoad1, setDidLoad1] = useState(false);
+  let [didSend, setDidSend] = useState(false);
 
   useEffect(() => {
     socket.emit('joinRoom', id);
     dispatch({type: 'FETCH_ROOM', payload: id});
   }, [id]);
 
-  // Loads PGN once the pgn variable has been updated
-  // function setUpBoard () {
-  //   console.log('set pgn');
-  //   game.loadPgn(pgn);
-  // };
-
-  // useEffect(() => {
-  //   if(!didLoad1) {
-  //   if(pgn) {
-  //     setUpBoard();
-  //     setDidLoad1(true);
-  //   };
-  // };
-  // }, [pgn])
-
   // Update variables once the room saga has loaded
   useEffect(() => {
     if(!didLoad) {
     if(room.length === 1) {
     setPlayerColor();
-    setPgn(room[0].pgn)
     setDidLoad(true)
       if(room[0].position !== 'start') {
         console.log('set game')
@@ -58,7 +41,7 @@ function ChessGame({socket}) {
   }, [room]);
 
   useEffect(() => {
-    setTurn(game.turn())
+    setTurn(game.turn());
   }, [game])
 
   // Sets player color from the database
@@ -74,8 +57,6 @@ function ChessGame({socket}) {
 
   // for onPieceDrop prop in chessboard, emits to makeMove socket
   function onDrop(sourceSquare, targetSquare) {
-    console.log(game.fen());
-    console.log(`from: ${sourceSquare} to:${targetSquare}`)
     const move = {
       from: sourceSquare,
       to: targetSquare,
@@ -87,18 +68,16 @@ function ChessGame({socket}) {
           to: targetSquare,
           promotion: "q",
         });
-          console.log(movePiece);
           setGame(new Chess(game.fen()))
           setPosition(game.fen());
-          setPgn(game.pgn());
-          console.log(game.fen());
           putPosition();
           socket.emit('makeMove', move, id);
+          
           return console.log('valid move');
       } catch (error) { 
         return console.log('invalid move', error)}
+        
   };
-    
 
   // Controls whether the pieces are draggable based on whos turn it is
   function areDraggable () {
@@ -115,14 +94,20 @@ function ChessGame({socket}) {
   }, [turn, color]);
 
   socket.on('makeMove', (m) => {
-    onDrop(m.from, m.to);
-    console.log('move made in socket');
+    try {
+      game.move(m);
+      setGame(new Chess(game.fen()))
+      setPosition(game.fen());
+      console.log('move made in socket');
+    } catch (error) {
+      console.log('error making move in socket', error)
+    }
   });
 
   // Update database with new position and pgn
   function putPosition() {
     axios.put(`/api/game/position/${id}`, { position: game.fen(), pgn: game.pgn() }).then((response) => {
-
+      dispatch({type: 'FETCH_ROOM', payload: id})
     }).catch(error => {
       console.log('Error in PUT /position', error);
     })
@@ -130,7 +115,8 @@ function ChessGame({socket}) {
 
   function handleClick() {
     socket.emit('leaveRoom', id);
-    history.push('/menu')
+    history.push('/menu');
+    
   }
   
   return (
