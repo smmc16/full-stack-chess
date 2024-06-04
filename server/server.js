@@ -49,9 +49,9 @@ io.on('connection', (socket) => {
     socket.join(room);
   });
 
-  socket.on('leaveRoom', () => {
-    console.log('room left');
-    socket.leave();
+  socket.on('leaveRoom', (id) => {
+    console.log('room left', id);
+    socket.leave(id);
   })
 
   socket.on('makeMove', (move, id) => {

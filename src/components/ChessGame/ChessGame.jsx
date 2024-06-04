@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './ChessGame.css';
 
@@ -16,6 +16,7 @@ function ChessGame({socket}) {
   let [color, setColor] = useState('w')
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
+  const history = useHistory();
   let [pgn, setPgn] = useState();
   let [didLoad, setDidLoad] = useState(false);
   let [didLoad1, setDidLoad1] = useState(false);
@@ -26,19 +27,19 @@ function ChessGame({socket}) {
   }, [id]);
 
   // Loads PGN once the pgn variable has been updated
-  function setUpBoard () {
-    console.log('set pgn');
-    game.loadPgn(pgn);
-  };
+  // function setUpBoard () {
+  //   console.log('set pgn');
+  //   game.loadPgn(pgn);
+  // };
 
-  useEffect(() => {
-    if(!didLoad1) {
-    if(pgn) {
-      setUpBoard();
-      setDidLoad1(true);
-    };
-  };
-  }, [pgn])
+  // useEffect(() => {
+  //   if(!didLoad1) {
+  //   if(pgn) {
+  //     setUpBoard();
+  //     setDidLoad1(true);
+  //   };
+  // };
+  // }, [pgn])
 
   // Update variables once the room saga has loaded
   useEffect(() => {
@@ -75,18 +76,18 @@ function ChessGame({socket}) {
   function onDrop(sourceSquare, targetSquare) {
     console.log(game.fen());
     console.log(`from: ${sourceSquare} to:${targetSquare}`)
+    const move = {
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: "q", 
+    };
+    try {
       const movePiece = game.move({
           from: sourceSquare,
           to: targetSquare,
           promotion: "q",
         });
-      const move = {
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: "q", 
-      };
-      console.log('move made in onDrop');
-      if (movePiece !== null) {
+          console.log(movePiece);
           setGame(new Chess(game.fen()))
           setPosition(game.fen());
           setPgn(game.pgn());
@@ -94,9 +95,8 @@ function ChessGame({socket}) {
           putPosition();
           socket.emit('makeMove', move, id);
           return console.log('valid move');
-      }
-      else { 
-        return console.log('invalid move')}
+      } catch (error) { 
+        return console.log('invalid move', error)}
   };
     
 
@@ -127,9 +127,15 @@ function ChessGame({socket}) {
       console.log('Error in PUT /position', error);
     })
   };
+
+  function handleClick() {
+    socket.emit('leaveRoom', id);
+    history.push('/menu')
+  }
   
   return (
     <div id="page">
+      <button onClick={handleClick}>Go to Menu</button>
       {room.length === 1 ? <h2>{room[0].room_id}</h2> : <h2></h2>}
       <Chessboard id="board"
         boardWidth={500}

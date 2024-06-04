@@ -38,7 +38,6 @@ function Menu({socket}) {
   useEffect(() => {
     dispatch({type: 'FETCH_ROOMS'});
     getUserRooms();
-    socket.emit('leaveRoom')
   }, [])
 
 // check enterRoomID everytime it changes
