@@ -82,9 +82,9 @@ router.get('/userRooms/:id', (req, res) => {
 
 router.put('/position/:id', (req, res) => {
   queryText = `
-  UPDATE "games" SET "position" = $1, "pgn" = $2 WHERE "id" = $3;
+  UPDATE "games" SET "position" = $1, "turn" = $2 WHERE "id" = $3;
   `
-  queryValues = [req.body.position, req.body.pgn, req.params.id]
+  queryValues = [req.body.position, req.body.turn, req.params.id]
   pool.query(queryText, queryValues)
   .then((dbRes) => {
     res.sendStatus(201);

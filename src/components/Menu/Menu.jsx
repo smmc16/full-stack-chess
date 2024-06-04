@@ -99,6 +99,14 @@ function Menu({socket}) {
     
   }
 
+  function turnNotice(room) {
+    if(user.id === room.white && room.turn == 'w') {
+      return `It's your turn!`
+    } else if(user.id === room.black && room.turn == 'b') {
+      return `It's your turn!`
+    }
+  }
+
   return (
     <div className="container">
       <form onSubmit={joinRoomBtn}>
@@ -115,6 +123,7 @@ function Menu({socket}) {
             arePiecesDraggable={false}
             boardOrientation={user.id === room.white ? 'white' : 'black'} />
             <h4>{room.room_id}</h4>
+            <p>{turnNotice(room)}</p>
           </CardContent>
         </Card>
       )}
