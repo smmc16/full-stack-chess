@@ -1,9 +1,9 @@
-const roomReducer = (state = [], action) => {
+const roomReducer = (state = {}, action) => {
     switch (action.type) {
       case 'SET_ROOM':
         return action.payload;
     case 'CLEAR_ROOM':
-        return [];
+        return {};
       default:
         return state;
     }
