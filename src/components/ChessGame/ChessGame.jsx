@@ -23,9 +23,6 @@ function ChessGame({socket}) {
   useEffect(() => {
     socket.emit('joinRoom', id);
     dispatch({type: 'FETCH_ROOM', payload: id});
-    // return () => {
-    //   dispatch({type: 'CLEAR_ROOM'})
-    // }
   }, [id]);
 
   // Loads PGN once the pgn variable has been updated
@@ -76,6 +73,8 @@ function ChessGame({socket}) {
 
   // for onPieceDrop prop in chessboard, emits to makeMove socket
   function onDrop(sourceSquare, targetSquare) {
+    console.log(game.fen());
+    console.log(`from: ${sourceSquare} to:${targetSquare}`)
       const movePiece = game.move({
           from: sourceSquare,
           to: targetSquare,
@@ -91,7 +90,7 @@ function ChessGame({socket}) {
           setGame(new Chess(game.fen()))
           setPosition(game.fen());
           setPgn(game.pgn());
-          
+          console.log(game.fen());
           putPosition();
           socket.emit('makeMove', move, id);
           return console.log('valid move');
