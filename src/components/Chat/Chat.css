@@ -1,11 +1,13 @@
 .chatbox {
     text-align: center;
     width: 1fr;
-    height: 450px;
+    height: 440px;
     overflow: auto;
     border: 2px solid #00acb0;
-    box-shadow: 3px 3px 3px gray;
-    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5 );
+    margin: 20px;
+    background-color: #00acb0;
 }
 
 .message {

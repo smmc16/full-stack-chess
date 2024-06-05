@@ -49,6 +49,7 @@ export default function Chat ({socket}) {
         <input type="submit" />
       </form>
         <div className='chatbox'>
+            {messages.length === 0 ? <p>*crickets*</p> : <p></p> }
           {messages.map((msg) => 
             <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
         ).reverse()}
