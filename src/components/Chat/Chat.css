@@ -1,7 +1,7 @@
 .chatbox {
     text-align: center;
     width: 1fr;
-    height: 440px;
+    height: 420px;
     overflow: auto;
     border: 2px solid #00acb0;
     border-radius: 5px;
