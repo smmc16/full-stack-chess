@@ -122,7 +122,7 @@ function ChessGame({socket}) {
     <div id="page">
       {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
       {game && (
-        <div className='board'>
+        <div id='board'>
           <Chessboard id={room.room_id}
           boardWidth={500}
           position={game.fen()} 
