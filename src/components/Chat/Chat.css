@@ -1,0 +1,13 @@
+.chatbox {
+    text-align: center;
+    width: 1fr;
+    padding: 10px;
+}
+
+.message {
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 5px;
+    background-color: aliceblue;
+    box-shadow: 3px 3px 3px gray;
+}

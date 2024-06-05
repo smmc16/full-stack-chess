@@ -117,19 +117,12 @@ function ChessGame({socket}) {
       console.log('Error in PUT /position', error);
     })
   };
-
-  function handleClick() {
-    socket.emit('leaveRoom', id);
-    history.push('/menu');
-    
-  }
   
   return (
     <div id="page">
-      <button onClick={handleClick}>Go to Menu</button>
-      {room.room_id ? <h2>{room.room_id}</h2> : <h2></h2>}
+      {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
       {game && (
-        <>
+        <div className='board'>
           <Chessboard id={room.room_id}
           boardWidth={500}
           position={game.fen()} 
@@ -142,10 +135,12 @@ function ChessGame({socket}) {
           customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
           
           />
-        </>
+        </div>
         
       )}
+      <div className='chat'>
       <Chat socket={socket}/>
+      </div>
     </div>
   );
 }

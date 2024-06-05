@@ -45,14 +45,14 @@ export default function Chat ({socket}) {
         <>
         <div id="chat">
       <form onSubmit={handleSubmit}>
-        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}/>
+        <input type="text" value={message} placeholder='Chat!' onChange={(e) => setMessage(e.target.value)}/>
         <input type="submit" />
       </form>
-      <ul>
+        <div className='chatbox'>
           {messages.map((msg) => 
-            <li key={msg.id}>{msg.author}: {msg.text}</li>
+            <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
         ).reverse()}
-      </ul>
+        </div>
      </div>
         </>
     )
