@@ -138,12 +138,12 @@ function Menu() {
     <div className="container">
       <div id='form'>
       <ThemeProvider theme={theme}>
-      <form onSubmit={joinRoomBtn}>
-        <Stack direction="row" style={stackStyle}>
-        <TextField value={enterRoomID} label="Room ID" onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
-        <Button type='submit' variant='contained' color="main" style={buttonStyle}>Join Room</Button>
-        </Stack>
-      </form>
+        <form onSubmit={joinRoomBtn}>
+          <Stack direction="row" style={stackStyle}>
+            <TextField value={enterRoomID} label="Room ID" onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
+            <Button type='submit' variant='contained' color="main" style={buttonStyle}>Join Room</Button>
+          </Stack>
+        </form>
       </ThemeProvider>
       </div>
       <div id='rooms'>
@@ -151,10 +151,11 @@ function Menu() {
         <Card onClick={() => roomBtn(room.id)} className='room' key={room.id}>
           <CardContent>
             <Chessboard 
-            position={room.position} 
-            boardWidth={100} 
-            arePiecesDraggable={false}
-            boardOrientation={user.id === room.white ? 'white' : 'black'} />
+              position={room.position} 
+              boardWidth={100} 
+              arePiecesDraggable={false}
+              boardOrientation={user.id === room.white ? 'white' : 'black'} 
+            />
             <h4>{room.room_id}</h4>
             <p>{turnNotice(room)}</p>
           </CardContent>
