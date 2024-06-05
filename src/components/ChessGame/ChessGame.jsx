@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './ChessGame.css';
+import Chat from '../Chat/Chat';
 
 function ChessGame({socket}) {
   const dispatch = useDispatch();
@@ -28,7 +29,6 @@ function ChessGame({socket}) {
   // Update variables once the room saga has loaded
   useEffect(() => {
     console.log('HERE', room)
-    if (!didLoad) {
     if(room.id && room.id === Number(id)) {
       setPlayerColor();
       setPosition(room.position);
@@ -37,7 +37,7 @@ function ChessGame({socket}) {
         setGame(new Chess(room.position));
         console.log('set game', room.position);
       }
-    }
+    
   }
   }, [room]);
 
@@ -58,9 +58,6 @@ function ChessGame({socket}) {
     }
   };
 
-  // To prevent calling new Chess() at every move
-  let gameCopy = new Chess();
-
   // for onPieceDrop prop in chessboard, emits to makeMove socket
   function onDrop(sourceSquare, targetSquare) {
     const move = {
@@ -69,14 +66,12 @@ function ChessGame({socket}) {
       promotion: "q", 
     };
     try {
-
-      gameCopy.loadPgn(game.pgn());
-      gameCopy.move({
+      game.move({
           from: sourceSquare,
           to: targetSquare,
           promotion: "q",
         });
-          setGame(gameCopy)
+          setGame(new Chess(game.fen()))
           setPosition(game.fen());
           putPosition();
           console.log(game.fen())
@@ -104,9 +99,8 @@ function ChessGame({socket}) {
 
   socket.on('makeMove', (m) => {
     try {
-      gameCopy.loadPgn(game.pgn());
-      gameCopy.move(m);
-      setGame(gameCopy);
+      game.move(m);
+      setGame(new Chess(game.fen()));
       setPosition(game.fen());
       console.log('move made in socket');
     } catch (error) {
@@ -116,9 +110,9 @@ function ChessGame({socket}) {
 
   // Update database with new position and pgn
   function putPosition() {
-    axios.put(`/api/game/position/${id}`, { position: game.fen(), pgn: game.pgn() }).then((response) => {
-      dispatch({type: 'FETCH_ROOM', payload: id})
-      console.log('position and pgn updated in database')
+    axios.put(`/api/game/position/${id}`, { position: game.fen(), turn: game.turn() }).then((response) => {
+      console.log('position and turn updated in database')
+      dispatch({type: 'FETCH_ROOM', payload: id});
     }).catch(error => {
       console.log('Error in PUT /position', error);
     })
@@ -134,7 +128,6 @@ function ChessGame({socket}) {
     <div id="page">
       <button onClick={handleClick}>Go to Menu</button>
       {room.room_id ? <h2>{room.room_id}</h2> : <h2></h2>}
-      
       {game && (
         <>
           <Chessboard id={room.room_id}
@@ -152,7 +145,7 @@ function ChessGame({socket}) {
         </>
         
       )}
-      
+      <Chat socket={socket}/>
     </div>
   );
 }
