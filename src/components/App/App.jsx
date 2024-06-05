@@ -70,7 +70,7 @@ function App() {
             exact
             path="/menu"
           >
-            <Menu socket={socket}/>
+            <Menu />
           </ProtectedRoute>
 
           <Route
