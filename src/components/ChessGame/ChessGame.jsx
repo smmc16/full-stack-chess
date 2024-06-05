@@ -11,14 +11,11 @@ function ChessGame({socket}) {
   const dispatch = useDispatch();
   const user = useSelector(store => store.user); 
   const room = useSelector(store => store.room);
-  let [position, setPosition] = useState('start');
-  let [game, setGame] = useState(new Chess());
+  let [game, setGame] = useState();
   let [turn, setTurn] = useState();
   let [color, setColor] = useState('w')
   let [draggable, setDraggable] = useState(true);
   const { id } = useParams();
-  const history = useHistory();
-  let [didLoad, setDidLoad] = useState(false)
 
   useEffect(() => {
     socket.emit('joinRoom', id);
@@ -31,11 +28,11 @@ function ChessGame({socket}) {
     console.log('HERE', room)
     if(room.id && room.id === Number(id)) {
       setPlayerColor();
-      setPosition(room.position);
-      setDidLoad(true);
       if(room.position !== 'start') {
         setGame(new Chess(room.position));
         console.log('set game', room.position);
+      } else if (room.position === 'start') {
+        setGame(new Chess());
       }
     
   }
@@ -72,7 +69,6 @@ function ChessGame({socket}) {
           promotion: "q",
         });
           setGame(new Chess(game.fen()))
-          setPosition(game.fen());
           putPosition();
           console.log(game.fen())
           socket.emit('makeMove', move, id);
@@ -101,7 +97,6 @@ function ChessGame({socket}) {
     try {
       game.move(m);
       setGame(new Chess(game.fen()));
-      setPosition(game.fen());
       console.log('move made in socket');
     } catch (error) {
       console.log('error making move in socket', error)

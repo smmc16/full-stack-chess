@@ -18,11 +18,11 @@ export default function Chat ({socket}) {
     let [index, setIndex] = useState(0);
 
     useEffect(() => {
-        socket.emit('joinRoom', room.id);
         dispatch({type: 'FETCH_ROOM', payload: id})
+        socket.emit('joinRoom', room.id);
       }, []); 
 
-    socket.once('sendMessage', (msg, user) => {
+    socket.on('sendMessage', (msg, user) => {
         console.log('message received');
         setIndex(index + 1);
         setMessages([...messages, {id: index, author: user, text: msg}])
