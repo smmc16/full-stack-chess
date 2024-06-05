@@ -38,7 +38,7 @@ function Menu() {
     console.log(checkedRoom);
   }
 
-// Update the rooms store
+// Update the rooms store and the rooms the user is in on page load
   useEffect(() => {
     dispatch({type: 'FETCH_ROOMS'});
     getUserRooms();
@@ -64,7 +64,7 @@ function Menu() {
         console.log('added second player');
         return setEnterRoomID('');
       } 
-      // Checking if a second player is already in the room
+      // Alerts if a second player is already in the room
       else if(room.room_id === enterRoomID && room.white) {
           alert('This room is full');
           return setEnterRoomID('');
@@ -113,6 +113,7 @@ function Menu() {
     }
   }
 
+  // To change the color of the join room button
   const { palette } = createTheme();
   const { augmentColor } = palette;
   const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });

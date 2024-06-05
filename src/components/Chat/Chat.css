@@ -1,13 +1,21 @@
 .chatbox {
     text-align: center;
     width: 1fr;
-    padding: 10px;
+    height: 440px;
+    overflow: auto;
+    border: 2px solid #00acb0;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5 );
+    margin: 20px;
+    background-color: #00acb0;
 }
 
 .message {
     border-radius: 10px;
+    width: 1fr;
     border: 1px solid black;
     padding: 5px;
-    background-color: aliceblue;
+    margin: 10px;
+    background-color: #e9e9e9;
     box-shadow: 3px 3px 3px gray;
 }
