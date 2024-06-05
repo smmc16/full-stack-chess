@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { createTheme, ThemeProvider, makeStyles } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
 import { Chessboard } from 'react-chessboard';
 import './Menu.css';
 
@@ -141,7 +141,7 @@ function Menu() {
       <ThemeProvider theme={theme}>
         <form onSubmit={joinRoomBtn}>
           <Stack direction="row" style={stackStyle}>
-            <TextField value={enterRoomID} label="Room ID" onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
+            <TextField value={enterRoomID} label="Room ID" InputLabelProps={{style: { color: '#00acb0' },}} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
             <Button type='submit' variant='contained' color="main" style={buttonStyle}>Join Room</Button>
           </Stack>
         </form>

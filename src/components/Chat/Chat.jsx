@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material';
 import axios from 'axios';
 import './Chat.css';
 
@@ -40,13 +43,30 @@ export default function Chat ({socket}) {
         }  
       }
 
+      // To change the color of the join room button
+  const { palette } = createTheme();
+  const { augmentColor } = palette;
+  const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+
+  const theme = createTheme({
+    palette: {
+        main: createColor('#00acb0'),
+    },
+  });
+
+    const buttonStyle = {
+      color: 'white',
+      height: '55px',
+    }
 
     return(
         <>
         <div id="chat">
       <form onSubmit={handleSubmit}>
-        <input type="text" value={message} placeholder='Chat!' onChange={(e) => setMessage(e.target.value)}/>
-        <input type="submit" />
+        <ThemeProvider theme={theme}>
+        <TextField type="text" value={message} label='Chat!' className='customOutline' InputLabelProps={{style: { color: '#00acb0' },}} onChange={(e) => setMessage(e.target.value)}/>
+        <Button type="submit" variant='contained' color='main' style={buttonStyle}>Send</Button>
+        </ThemeProvider>
       </form>
         <div className='chatbox'>
             {messages.length === 0 ? <p>*crickets*</p> : <p></p> }
