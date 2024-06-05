@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './ChessGame.css';
+import Chat from '../Chat/Chat';
 
 function ChessGame({socket}) {
   const dispatch = useDispatch();
@@ -127,7 +128,6 @@ function ChessGame({socket}) {
     <div id="page">
       <button onClick={handleClick}>Go to Menu</button>
       {room.room_id ? <h2>{room.room_id}</h2> : <h2></h2>}
-      
       {game && (
         <>
           <Chessboard id={room.room_id}
@@ -145,7 +145,7 @@ function ChessGame({socket}) {
         </>
         
       )}
-      
+      <Chat socket={socket}/>
     </div>
   );
 }

@@ -59,6 +59,10 @@ io.on('connection', (socket) => {
     socket.to(id).emit('makeMove', move);
   });
 
+  socket.on('sendMessage', (msg, id, user) => {
+    socket.to(id).emit('sendMessage', msg, user);
+  });
+
   socket.on('disconnect', () => {
       console.log('User disconnected');
   });
