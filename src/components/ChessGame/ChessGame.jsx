@@ -9,6 +9,7 @@ import Chat from '../Chat/Chat';
 
 function ChessGame({socket}) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const user = useSelector(store => store.user); 
   const room = useSelector(store => store.room);
   let [game, setGame] = useState();
@@ -42,6 +43,12 @@ function ChessGame({socket}) {
     if(game) {
       setTurn(game.turn());
     }
+    if (game && game.isGameOver()){
+        setTimeout(() => {
+          deleteGame();
+          history.push('/menu')
+        }, 20.0 * 1000)
+      }
   }, [game])
 
   // Sets player color from the database
@@ -112,10 +119,24 @@ function ChessGame({socket}) {
       console.log('Error in PUT /position', error);
     })
   };
+
+  function deleteGame() {
+    axios.delete(`/api/game/gameover/${id}`).then((response) => {
+      console.log('game deleted')
+    }).catch(error => {
+      console.log('Error in DELETE /gameover', error);
+    })
+  };
   
   return (
     <div id="page">
       {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
+      {game && game.isGameOver() && game.turn() === "w" ? <h2 className='gameOver'>Game Over <br /> Black is the winner!</h2> : <h2></h2>}
+      {game && game.isGameOver() && game.turn() === "b" ? <h2 className='gameOver'>Game Over <br /> White is the winner!</h2> : <h2></h2>}
+      <div id='turnColor'>
+      {game && game.turn() === 'w' ? <h2>Turn: White</h2> : <h2>Turn: Black</h2>}
+      {room && color === 'w' ? <h4>You are playing as white</h4> : <h4>You are playing as black</h4>}
+      </div>
       {game && (
         <div id='board'>
           <Chessboard id={room.room_id}
