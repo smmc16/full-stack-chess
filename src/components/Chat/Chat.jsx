@@ -13,7 +13,6 @@ export default function Chat ({socket}) {
 
     const {id} = useParams();
 
-    let room = useSelector(store => store.room);
     let user = useSelector(store => store.user);
 
     let [message, setMessage] = useState('');
@@ -22,42 +21,42 @@ export default function Chat ({socket}) {
 
     useEffect(() => {
         dispatch({type: 'FETCH_ROOM', payload: id})
-        socket.emit('joinRoom', room.id);
+        socket.emit('joinRoom', id);
       }, []); 
-
-    socket.on('sendMessage', (msg, user) => {
+    
+    socket.once('sendMessage', (msg, user) => {
         console.log('message received');
         setIndex(index + 1);
         setMessages([...messages, {id: index, author: user, text: msg}])
-      });
+        });
 
 
     function handleSubmit (e) {
         e.preventDefault();
         if(message) {
           setIndex(index + 1);
-          socket.emit('sendMessage', message, room.id, user.username);
+          socket.emit('sendMessage', message, id, user.username);
           setMessages([...messages, {id: index, author: user.username, text: message}])
           setMessage('');
           ;
         }  
       }
 
-      // To change the color of the join room button
-  const { palette } = createTheme();
-  const { augmentColor } = palette;
-  const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+    // To change the color of the join room button
+    const { palette } = createTheme();
+    const { augmentColor } = palette;
+    const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
 
-  const theme = createTheme({
-    palette: {
-        main: createColor('#00acb0'),
-    },
-  });
+    const theme = createTheme({
+        palette: {
+            main: createColor('#00acb0'),
+        },
+    });
 
-    const buttonStyle = {
-      color: 'white',
-      height: '55px',
-    }
+        const buttonStyle = {
+        color: 'white',
+        height: '55px',
+        }
 
     return(
         <>
@@ -70,9 +69,9 @@ export default function Chat ({socket}) {
       </form>
         <div className='chatbox'>
             {messages.length === 0 ? <p>*crickets*</p> : <p></p> }
-          {messages.map((msg) => 
-            <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
-        ).reverse()}
+            {messages.map((msg) => 
+                <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
+            ).reverse()}
         </div>
      </div>
         </>

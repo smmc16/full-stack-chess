@@ -10,6 +10,7 @@ const passport = require('./strategies/user.strategy');
 // Route Includes
 const userRouter = require('./routes/user.router');
 const gameRouter = require('./routes/game.router');
+const chatRouter = require('./routes/chat.router');
 
 // Express Middleware
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use(passport.session());
 // Routes
 app.use('/api/user', userRouter);
 app.use('/api/game', gameRouter);
+app.use('/api/chat', chatRouter);
 
 const cors = require('cors');
 app.use(cors())
