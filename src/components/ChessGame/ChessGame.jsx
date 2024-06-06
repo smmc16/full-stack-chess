@@ -39,6 +39,7 @@ function ChessGame({socket}) {
   }
   }, [room]);
 
+  // When game changes, set the turn and check if the game is over
   useEffect(() => {
     if(game) {
       setTurn(game.turn());
@@ -47,7 +48,7 @@ function ChessGame({socket}) {
         setTimeout(() => {
           deleteGame();
           history.push('/menu')
-        }, 20.0 * 1000)
+        }, 60.0 * 1000)
       }
   }, [game])
 
@@ -120,6 +121,7 @@ function ChessGame({socket}) {
     })
   };
 
+  // Deletes game from db once it's over
   function deleteGame() {
     axios.delete(`/api/game/gameover/${id}`).then((response) => {
       console.log('game deleted')
@@ -127,12 +129,28 @@ function ChessGame({socket}) {
       console.log('Error in DELETE /gameover', error);
     })
   };
+
+  // Displays information on why the game is over
+  function gameOver () {
+    if (game && game.isGameOver() && game.turn() === "w" && !game.isDraw() && !game.isStalemate() && !game.isThreefoldRepetition()){
+      return `Game Over: Black is the winner!`;
+    } else if (game && game.isGameOver() && game.turn() === "b" && !game.isDraw() && !game.isStalemate() && !game.isThreefoldRepetition()){
+      return `Game Over: White is the winner!`;
+    } else if (game && game.isGameOver() && game.isDraw()){
+      return `Game Over: It's a draw!`;
+    } else if (game && game.isGameOver() && game.isStalemate()){
+      return `Game Over: It's a stalemate!`;
+    } else if (game && game.isGameOver() && game.isThreefoldRepetition()){
+      return `Game Over: Threefold repitition, the same position has occured 3 times during the game`;
+    } else {
+      return '';
+    }
+  }
   
   return (
     <div id="page">
       {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
-      {game && game.isGameOver() && game.turn() === "w" ? <h2 className='gameOver'>Game Over <br /> Black is the winner!</h2> : <h2></h2>}
-      {game && game.isGameOver() && game.turn() === "b" ? <h2 className='gameOver'>Game Over <br /> White is the winner!</h2> : <h2></h2>}
+      <h2 className='gameOver'>{gameOver()}</h2>
       <div id='turnColor'>
       {game && game.turn() === 'w' ? <h2>Turn: White</h2> : <h2>Turn: Black</h2>}
       {room && color === 'w' ? <h4>You are playing as white</h4> : <h4>You are playing as black</h4>}
