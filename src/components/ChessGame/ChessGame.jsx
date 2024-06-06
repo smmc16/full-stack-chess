@@ -39,6 +39,7 @@ function ChessGame({socket}) {
   }
   }, [room]);
 
+  // When game changes, set the turn and check if the game is over
   useEffect(() => {
     if(game) {
       setTurn(game.turn());
@@ -120,6 +121,7 @@ function ChessGame({socket}) {
     })
   };
 
+  // Deletes game from db once it's over
   function deleteGame() {
     axios.delete(`/api/game/gameover/${id}`).then((response) => {
       console.log('game deleted')
@@ -133,6 +135,7 @@ function ChessGame({socket}) {
       {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
       {game && game.isGameOver() && game.turn() === "w" ? <h2 className='gameOver'>Game Over <br /> Black is the winner!</h2> : <h2></h2>}
       {game && game.isGameOver() && game.turn() === "b" ? <h2 className='gameOver'>Game Over <br /> White is the winner!</h2> : <h2></h2>}
+      {game && game.isDraw() ? <h2 className='gameOver'>It's a draw!</h2> : <h2></h2>}
       <div id='turnColor'>
       {game && game.turn() === 'w' ? <h2>Turn: White</h2> : <h2>Turn: Black</h2>}
       {room && color === 'w' ? <h4>You are playing as white</h4> : <h4>You are playing as black</h4>}
