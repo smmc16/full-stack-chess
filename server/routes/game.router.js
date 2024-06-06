@@ -61,7 +61,7 @@ router.put('/secondplayer', (req, res) => {
     res.sendStatus(201);
   })
   .catch((dbErr) => {
-    console.log(`Error adding new room`, dbErr);
+    console.log(`Error adding second player`, dbErr);
     res.sendStatus(500);
   });
 });
@@ -75,7 +75,7 @@ router.get('/userRooms/:id', (req, res) => {
     res.send(dbRes.rows);
   })
   .catch((dbErr) => {
-    console.log(`Error getting rooms`, dbErr);
+    console.log(`Error getting user rooms`, dbErr);
     res.sendStatus(500);
   });
 });
@@ -90,9 +90,23 @@ router.put('/position/:id', (req, res) => {
     res.sendStatus(201);
   })
   .catch((dbErr) => {
-    console.log(`Error adding new room`, dbErr);
+    console.log(`Error updating position`, dbErr);
     res.sendStatus(500);
   });
 });
+
+router.delete('/gameover/:id', (req, res) => {
+  queryText = `
+  DELETE FROM "games" WHERE "id" = $1;
+  `
+  pool.query(queryText,[req.params.id])
+  .then((dbRes) => {
+    res.sendStatus(201);
+  })
+  .catch((dbErr) => {
+    console.log(`Error deleting room`, dbErr);
+    res.sendStatus(500);
+  });
+})
 
 module.exports = router;
