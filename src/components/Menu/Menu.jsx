@@ -79,6 +79,7 @@ function Menu() {
         axios.post('/api/game/firstplayer', gameObject).then((response) => {
           dispatch({type: 'FETCH_ROOMS'})
           getUserRooms();
+          createChat();
         }).catch(error => {
           console.log('Error in POST /firstplayer', error);
         })
@@ -99,10 +100,24 @@ function Menu() {
     })
   }
 
+  // Creates chat in db
+  function createChat() {
+    let id;
+    axios.get(`/api/game/targetID/${enterRoomID}`).then((response) => {
+      id = response.data[0].id;
+      axios.post(`/api/chat/setup/${id}`).then((response) => {
+      }).catch((error) => {
+          console.log('error creating chat', error)
+      })
+    }).catch((error) => {
+      console.log('error targetting id', error)
+    });
+  };
+
   // Pushes user to the game page at the correct id
   function roomBtn(id) {
     history.push(`/game/${id}`)
-  }
+  };
 
   // Notifies user if it's their turn
   function turnNotice(room) {
@@ -111,7 +126,7 @@ function Menu() {
     } else if(user.id === room.black && room.turn == 'b') {
       return `It's your turn!`
     }
-  }
+  };
 
   // To change the color of the join room button
   const { palette } = createTheme();
@@ -124,16 +139,16 @@ function Menu() {
     },
   });
 
-    const buttonStyle = {
-      color: 'white',
-      height: '55px',
-    }
+  const buttonStyle = {
+    color: 'white',
+    height: '55px',
+  };
 
-    const stackStyle = {
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-    }
+  const stackStyle = {
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  };
 
   return (
     <div className="container">
@@ -141,8 +156,17 @@ function Menu() {
       <ThemeProvider theme={theme}>
         <form onSubmit={joinRoomBtn}>
           <Stack direction="row" style={stackStyle}>
-            <TextField value={enterRoomID} label="Room ID" InputLabelProps={{style: { color: '#00acb0' },}} onChange={(e) => {setEnterRoomID(e.target.value)}}/> 
-            <Button type='submit' variant='contained' color="main" style={buttonStyle}>Join Room</Button>
+            <TextField 
+              value={enterRoomID} 
+              label="Room ID" 
+              InputLabelProps={{style: { color: '#00acb0' },}} 
+              onChange={(e) => {setEnterRoomID(e.target.value)}}
+              /> 
+            <Button 
+              type='submit' 
+              variant='contained' 
+              color="main" 
+              style={buttonStyle}>Join Room</Button>
           </Stack>
         </form>
       </ThemeProvider>
