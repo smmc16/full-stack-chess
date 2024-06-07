@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Chessboard } from 'react-chessboard';
+import { v4 as uuidv4 } from 'uuid';
 import './Menu.css';
 
 function Menu() {
