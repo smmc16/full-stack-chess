@@ -21,7 +21,6 @@ function ChessGame({socket}) {
   useEffect(() => {
     socket.emit('joinRoom', id);
     dispatch({type: 'FETCH_ROOM', payload: id});
-    
   }, [id]);
 
   // Update variables once the room saga has loaded
@@ -63,19 +62,16 @@ function ChessGame({socket}) {
     }
   };
 
+  let move;
   // for onPieceDrop prop in chessboard, emits to makeMove socket
   function onDrop(sourceSquare, targetSquare) {
-    const move = {
+    move = {
       from: sourceSquare,
       to: targetSquare,
       promotion: "q", 
     };
     try {
-      game.move({
-          from: sourceSquare,
-          to: targetSquare,
-          promotion: "q",
-        });
+      game.move(move);
           setGame(new Chess(game.fen()))
           putPosition();
           console.log(game.fen())
@@ -101,13 +97,15 @@ function ChessGame({socket}) {
       areDraggable();
   }, [turn, color]);
 
+  // Listens for 'makeMove' socket, fetches room to keep board updated
   socket.on('makeMove', (m) => {
     try {
       game.move(m);
       setGame(new Chess(game.fen()));
+      dispatch({type: 'FETCH_ROOM', payload: id});
       console.log('move made in socket');
     } catch (error) {
-      console.log('error making move in socket', error)
+      console.log('error making move in socket')
     }
   });
 
@@ -126,12 +124,12 @@ function ChessGame({socket}) {
     axios.delete(`/api/chat/gameover/${id}`).then((response) => {
       console.log('chats deleted')
     }).catch(error => {
-      console.log('Error in DELETE /gameover', error);
+      console.log('Error in DELETE /chat/gameover', error);
     });
     axios.delete(`/api/game/gameover/${id}`).then((response) => {
       console.log('game deleted')
     }).catch(error => {
-      console.log('Error in DELETE /gameover', error);
+      console.log('Error in DELETE /game/gameover', error);
     });
   };
 

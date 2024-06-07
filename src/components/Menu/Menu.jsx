@@ -46,17 +46,17 @@ function Menu() {
 
 // Check enterRoomID everytime it changes
   useEffect(() => {
-    checkRooms()
+    checkRooms();
   }, [enterRoomID])
 
   function joinRoomBtn() {
     dispatch({type: 'FETCH_ROOMS'});
     console.log(rooms);
     for(let room of rooms) {
+      dispatch({type: 'FETCH_ROOMS'})
       // If a room exists and has no second player, update the db to add the second player
       if (room.room_id === enterRoomID && room.white == null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
-          dispatch({type: 'FETCH_ROOMS'})
           getUserRooms();
         }).catch(error => {
           console.log('Error in PUT /secondplayer', error);
@@ -77,10 +77,9 @@ function Menu() {
       // Adds the room to the db if it doesnt exist
       else if (checkedRoom) {
         axios.post('/api/game/firstplayer', gameObject).then((response) => {
-          dispatch({type: 'FETCH_ROOMS'})
           getUserRooms();
-          createChat();
         }).catch(error => {
+          alert('Please try again')
           console.log('Error in POST /firstplayer', error);
         })
         console.log('added room')

@@ -33,7 +33,7 @@ const cors = require('cors');
 app.use(cors())
 const http = require('http');
 
-const ioPORT = 5002;
+const ioPORT = process.env.ioPORT || 5002;
 
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
@@ -51,11 +51,6 @@ io.on('connection', (socket) => {
     socket.join(room);
   });
 
-  socket.on('leaveRoom', (id) => {
-    console.log('room left', id);
-    socket.leave(id);
-  })
-
   socket.on('makeMove', (move, id) => {
     console.log('move made', move, id)
     socket.to(id).emit('makeMove', move);
@@ -71,10 +66,10 @@ io.on('connection', (socket) => {
   });
 
 io.listen(ioPORT, () => {
-  console.log('Listening on PORT:', ioPORT);
+  console.log('Listening on ioPORT:', ioPORT);
 });
 
 // Listen Server & Port
 app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
+  console.log(`Listening on PORT: ${PORT}`);
 });
