@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/history/:id', (req, res) => {
     queryText = `
-    SELECT "messages" FROM "chat" WHERE "room_id" = $1;
+    SELECT * FROM "chat" WHERE "room_id" = $1 ORDER BY "id";
     `;
     pool.query(queryText, [req.params.id])
     .then((dbRes) => {
@@ -30,11 +30,11 @@ router.get('/history/:id', (req, res) => {
     });
   });
 
-  router.put('/send/:id', (req, res) => {
+  router.post('/send/:id', (req, res) => {
     queryText = `
-    UPDATE "chat" SET "messages" = $1 WHERE "room_id" = $2;
+    INSERT INTO "chat" (message, room_id, "user") VALUES ($1, $2, $3);
     `;
-    queryValues = [req.body.messages, req.params.id]
+    queryValues = [req.body.message, req.params.id, req.body.user]
     pool.query(queryText, queryValues)
     .then((dbRes) => {
       res.sendStatus(201);

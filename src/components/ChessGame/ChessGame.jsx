@@ -45,11 +45,11 @@ function ChessGame({socket}) {
       setTurn(game.turn());
     }
     if (game && game.isGameOver()){
-        setTimeout(() => {
-          deleteGame();
-          history.push('/menu')
-        }, 60.0 * 1000)
-      }
+      setTimeout(() => {
+        deleteGame();
+        history.push('/menu')
+      }, 60.0 * 1000)
+    }
   }, [game])
 
   // Sets player color from the database
@@ -121,8 +121,8 @@ function ChessGame({socket}) {
     })
   };
 
-  // Deletes game from db once it's over
-  function deleteGame() {
+   // Deletes game from db once it's over
+   function deleteGame() {
     axios.delete(`/api/game/gameover/${id}`).then((response) => {
       console.log('game deleted')
     }).catch(error => {
@@ -146,10 +146,10 @@ function ChessGame({socket}) {
       return '';
     }
   }
-  
+
   return (
     <div id="page">
-      {room.room_id ? <h2 id="roomID">{room.room_id}</h2> : <h2></h2>}
+      {room.room_id ? <h2 id="roomID">Room ID: {room.room_id}</h2> : <h2></h2>}
       <h2 className='gameOver'>{gameOver()}</h2>
       <div id='turnColor'>
       {game && game.turn() === 'w' ? <h2>Turn: White</h2> : <h2>Turn: Black</h2>}

@@ -24,6 +24,7 @@ export default function Chat ({socket}) {
         dispatch({type: 'FETCH_ROOM', payload: id});
         dispatch({type: 'FETCH_CHAT', payload: id});
         socket.emit('joinRoom', id);
+        console.log('CHAT', chat);
       }, []); 
     
     socket.once('sendMessage', (msg, user) => {
@@ -36,10 +37,17 @@ export default function Chat ({socket}) {
     function handleSubmit (e) {
         e.preventDefault();
         if(message) {
-          setIndex(index + 1);
-          socket.emit('sendMessage', message, id, user.username);
-          setMessages([...messages, {id: index, author: user.username, text: message}])
-          setMessage('');
+            let messageObject = {message, user: user.username}
+            setIndex(index + 1);
+            socket.emit('sendMessage', message, id, user.username);
+            setMessages([...messages, {id: index, author: user.username, text: message}])
+            axios.post(`/api/chat/send/${id}`, messageObject).then((response) => {
+
+            }).catch((error) => {
+                console.log('Error sending messages', error)
+            })
+
+            setMessage('');
           ;
         }  
       }
@@ -70,9 +78,12 @@ export default function Chat ({socket}) {
         </ThemeProvider>
       </form>
         <div className='chatbox'>
-            {messages.length === 0 ? <p>*crickets*</p> : <p></p> }
+
             {messages.map((msg) => 
                 <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
+            ).reverse()}
+            {chat.map((msg) => 
+                <p key={msg.id} className='message'><b>{msg.user}</b>: {msg.message}</p>
             ).reverse()}
         </div>
      </div>
