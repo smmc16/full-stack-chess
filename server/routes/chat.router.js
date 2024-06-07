@@ -45,4 +45,18 @@ router.get('/history/:id', (req, res) => {
     });
   });
 
+  router.delete('/gameover/:id', (req, res) => {
+    queryText = `
+    DELETE FROM "chat" WHERE "room_id" = $1;
+    `
+    pool.query(queryText,[req.params.id])
+    .then((dbRes) => {
+      res.sendStatus(201);
+    })
+    .catch((dbErr) => {
+      console.log(`Error deleting room`, dbErr);
+      res.sendStatus(500);
+    });
+  })
+
 module.exports = router;

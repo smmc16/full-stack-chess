@@ -98,20 +98,6 @@ function Menu() {
     }).catch(error => {
       console.log('Error in GET /userRooms', error);
     })
-  }
-
-  // Creates chat in db
-  function createChat() {
-    let id;
-    axios.get(`/api/game/targetID/${enterRoomID}`).then((response) => {
-      id = response.data[0].id;
-      axios.post(`/api/chat/setup/${id}`).then((response) => {
-      }).catch((error) => {
-          console.log('error creating chat', error)
-      })
-    }).catch((error) => {
-      console.log('error targetting id', error)
-    });
   };
 
   // Pushes user to the game page at the correct id
@@ -152,6 +138,7 @@ function Menu() {
 
   return (
     <div className="container">
+      <p>Welcome {user.username}!</p>
       <div id='form'>
       <ThemeProvider theme={theme}>
         <form onSubmit={joinRoomBtn}>
@@ -173,7 +160,7 @@ function Menu() {
       </div>
       <div id='rooms'>
       {userRooms.map((room) => 
-        <Card onClick={() => roomBtn(room.id)} className='room' key={room.id}>
+        <Card onClick={() => roomBtn(room.room_id)} className='room' key={room.id}>
           <CardContent>
             <Chessboard 
               position={room.position} 
