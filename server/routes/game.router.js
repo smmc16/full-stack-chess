@@ -109,4 +109,18 @@ router.delete('/gameover/:id', (req, res) => {
   });
 })
 
+router.get('/targetID/:id', (req, res) => {
+  queryText = `
+  SELECT "id" FROM "games" WHERE "room_id" = $1;
+  `
+  pool.query(queryText, [req.params.id])
+  .then((dbRes) => {
+    res.status(200).send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error targetting id`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
 module.exports = router;

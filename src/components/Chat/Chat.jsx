@@ -13,51 +13,60 @@ export default function Chat ({socket}) {
 
     const {id} = useParams();
 
-    let room = useSelector(store => store.room);
-    let user = useSelector(store => store.user);
+    const user = useSelector(store => store.user);
+    const chat = useSelector(store => store.chat);
 
     let [message, setMessage] = useState('');
     let [messages, setMessages] = useState([]);
     let [index, setIndex] = useState(0);
 
     useEffect(() => {
-        dispatch({type: 'FETCH_ROOM', payload: id})
-        socket.emit('joinRoom', room.id);
+        dispatch({type: 'FETCH_ROOM', payload: id});
+        dispatch({type: 'FETCH_CHAT', payload: id});
+        socket.emit('joinRoom', id);
+        console.log('CHAT', chat);
       }, []); 
-
-    socket.on('sendMessage', (msg, user) => {
+    
+    socket.once('sendMessage', (msg, user) => {
         console.log('message received');
         setIndex(index + 1);
         setMessages([...messages, {id: index, author: user, text: msg}])
-      });
+        });
 
 
     function handleSubmit (e) {
         e.preventDefault();
         if(message) {
-          setIndex(index + 1);
-          socket.emit('sendMessage', message, room.id, user.username);
-          setMessages([...messages, {id: index, author: user.username, text: message}])
-          setMessage('');
+            let messageObject = {message, user: user.username}
+            setIndex(index + 1);
+            socket.emit('sendMessage', message, id, user.username);
+            setMessages([...messages, {id: index, author: user.username, text: message}])
+            axios.post(`/api/chat/send/${id}`, messageObject).then((response) => {
+
+            }).catch((error) => {
+                console.log('Error sending messages', error)
+            })
+
+            setMessage('');
           ;
         }  
       }
 
-      // To change the color of the join room button
-  const { palette } = createTheme();
-  const { augmentColor } = palette;
-  const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+    // To change the color of the join room button
+    const { palette } = createTheme();
+    const { augmentColor } = palette;
+    const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
 
-  const theme = createTheme({
-    palette: {
-        main: createColor('#00acb0'),
-    },
-  });
+    const theme = createTheme({
+        palette: {
+            main: createColor('#00acb0'),
+        },
+    });
 
-    const buttonStyle = {
-      color: 'white',
-      height: '55px',
-    }
+        const buttonStyle = {
+        color: 'white',
+        height: '55px',
+        }
 
     return(
         <>
@@ -69,10 +78,13 @@ export default function Chat ({socket}) {
         </ThemeProvider>
       </form>
         <div className='chatbox'>
-            {messages.length === 0 ? <p>*crickets*</p> : <p></p> }
-          {messages.map((msg) => 
-            <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
-        ).reverse()}
+
+            {messages.map((msg) => 
+                <p key={msg.id} className='message'><b>{msg.author}</b>: {msg.text}</p>
+            ).reverse()}
+            {chat.map((msg) => 
+                <p key={msg.id} className='message'><b>{msg.user}</b>: {msg.message}</p>
+            ).reverse()}
         </div>
      </div>
         </>

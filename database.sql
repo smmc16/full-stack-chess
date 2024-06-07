@@ -15,5 +15,12 @@ CREATE TABLE "games" (
 	"turn" VARCHAR(1) DEFAULT 'w',
 	"winner" INT REFERENCES "user"
 	);
+
+CREATE TABLE "chat" (
+	"id" SERIAL PRIMARY KEY,
+	"room_id" INT REFERENCES "games",
+	"user" VARCHAR(80),
+	"message" VARCHAR(500)
+	);	
     
 INSERT INTO "games" (room_id, black) VALUES ('room', 1);
