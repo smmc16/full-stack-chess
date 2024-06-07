@@ -13,14 +13,16 @@ export default function Chat ({socket}) {
 
     const {id} = useParams();
 
-    let user = useSelector(store => store.user);
+    const user = useSelector(store => store.user);
+    const chat = useSelector(store => store.chat);
 
     let [message, setMessage] = useState('');
     let [messages, setMessages] = useState([]);
     let [index, setIndex] = useState(0);
 
     useEffect(() => {
-        dispatch({type: 'FETCH_ROOM', payload: id})
+        dispatch({type: 'FETCH_ROOM', payload: id});
+        dispatch({type: 'FETCH_CHAT', payload: id});
         socket.emit('joinRoom', id);
       }, []); 
     
