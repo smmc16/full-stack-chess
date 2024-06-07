@@ -27,7 +27,7 @@ function ChessGame({socket}) {
   // Update variables once the room saga has loaded
   useEffect(() => {
     console.log('HERE', room)
-    if(room.id && room.id === Number(id)) {
+    if(room.room_id && room.room_id === id) {
       setPlayerColor();
       if(room.position !== 'start') {
         setGame(new Chess(room.position));
@@ -123,11 +123,16 @@ function ChessGame({socket}) {
 
    // Deletes game from db once it's over
    function deleteGame() {
+    axios.delete(`/api/chat/gameover/${id}`).then((response) => {
+      console.log('chats deleted')
+    }).catch(error => {
+      console.log('Error in DELETE /gameover', error);
+    });
     axios.delete(`/api/game/gameover/${id}`).then((response) => {
       console.log('game deleted')
     }).catch(error => {
       console.log('Error in DELETE /gameover', error);
-    })
+    });
   };
 
   // Displays information on why the game is over
@@ -154,6 +159,7 @@ function ChessGame({socket}) {
       <div id='turnColor'>
       {game && game.turn() === 'w' ? <h2>Turn: White</h2> : <h2>Turn: Black</h2>}
       {room && color === 'w' ? <h4>You are playing as white</h4> : <h4>You are playing as black</h4>}
+      {game && game.inCheck() ? <h4>King is in check</h4> : <h4></h4>}
       </div>
       {game && (
         <div id='board'>

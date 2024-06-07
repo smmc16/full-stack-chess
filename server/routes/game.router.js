@@ -18,7 +18,7 @@ router.get('/rooms', (req, res) => {
 
 router.get('/room/:id', (req, res) => {
   queryText = `
-  SELECT * FROM "games" WHERE "id" = $1;
+  SELECT * FROM "games" WHERE "room_id" = $1;
   `
   pool.query(queryText, [req.params.id])
   .then((dbRes) => {
@@ -82,7 +82,7 @@ router.get('/userRooms/:id', (req, res) => {
 
 router.put('/position/:id', (req, res) => {
   queryText = `
-  UPDATE "games" SET "position" = $1, "turn" = $2 WHERE "id" = $3;
+  UPDATE "games" SET "position" = $1, "turn" = $2 WHERE "room_id" = $3;
   `
   queryValues = [req.body.position, req.body.turn, req.params.id]
   pool.query(queryText, queryValues)
@@ -97,7 +97,7 @@ router.put('/position/:id', (req, res) => {
 
 router.delete('/gameover/:id', (req, res) => {
   queryText = `
-  DELETE FROM "games" WHERE "id" = $1;
+  DELETE FROM "games" WHERE "room_id" = $1;
   `
   pool.query(queryText,[req.params.id])
   .then((dbRes) => {
@@ -107,7 +107,7 @@ router.delete('/gameover/:id', (req, res) => {
     console.log(`Error deleting room`, dbErr);
     res.sendStatus(500);
   });
-})
+});
 
 router.get('/targetID/:id', (req, res) => {
   queryText = `
