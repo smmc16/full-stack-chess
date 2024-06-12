@@ -46,8 +46,9 @@ function ChessGame({socket}) {
     if (game && game.isGameOver()){
       setTimeout(() => {
         deleteGame();
-        history.push('/menu')
-      }, 60.0 * 1000)
+        history.push('/menu');
+      }, 20.0 * 1000);
+      
     }
   }, [game])
 
@@ -109,7 +110,7 @@ function ChessGame({socket}) {
     }
   });
 
-  // Update database with new position and pgn
+  // Update database with new position
   function putPosition() {
     axios.put(`/api/game/position/${id}`, { position: game.fen(), turn: game.turn() }).then((response) => {
       console.log('position and turn updated in database')

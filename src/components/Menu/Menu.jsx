@@ -54,7 +54,6 @@ function Menu() {
     dispatch({type: 'FETCH_ROOMS'});
     console.log(rooms);
     for(let room of rooms) {
-      dispatch({type: 'FETCH_ROOMS'})
       // If a room exists and has no second player, update the db to add the second player
       if (room.room_id === enterRoomID && room.white == null) {
         axios.put('/api/game/secondplayer', gameObject).then((response) => {
@@ -166,7 +165,9 @@ function Menu() {
               position={room.position} 
               boardWidth={100} 
               arePiecesDraggable={false}
-              boardOrientation={user.id === room.white ? 'white' : 'black'} 
+              boardOrientation={user.id === room.white ? 'white' : 'black'}
+              customDarkSquareStyle={{backgroundColor: '#6e6a72'}}
+              customLightSquareStyle={{backgroundColor: '#d9d9d9'}} 
             />
             <h4>{room.room_id}</h4>
             <p>{turnNotice(room)}</p>
