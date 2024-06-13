@@ -78,7 +78,8 @@ function LandingPage() {
                 customDarkSquareStyle={{backgroundColor: '#4b464f'}}
                 customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
               />
-            </div>
+              <h4>Test out the chessboard! The computer moves are randomized</h4>
+            </div> 
           </div>         
         </div>
         <div className="grid-col grid-col_4">
