@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {useSelector} from 'react-redux';
+import { Button, TextField } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+// To change the color of the button
+const { palette } = createTheme();
+const { augmentColor } = palette;
+const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+
+const theme = createTheme({
+  palette: {
+      main: createColor('#00acb0'),
+  },
+});
 
 function LoginForm() {
   const [username, setUsername] = useState('');
@@ -24,6 +37,15 @@ function LoginForm() {
     }
   }; // end login
 
+  const buttonStyle = {
+    color: 'white',
+    height: '55px',
+  };
+
+  const inputStyle = {
+    margin: '5px',
+  }
+
   return (
     <form className="formPanel" onSubmit={login}>
       <h2>Login</h2>
@@ -32,33 +54,43 @@ function LoginForm() {
           {errors.loginMessage}
         </h3>
       )}
+      <ThemeProvider theme={theme}>
       <div>
-        <label htmlFor="username">
-          Username:
-          <input
+          <TextField
             type="text"
             name="username"
-            required
+            label='Username'
+            style={inputStyle}
+            InputLabelProps={{style: { color: '#00acb0' },}}
             value={username}
+            required
             onChange={(event) => setUsername(event.target.value)}
           />
-        </label>
       </div>
       <div>
-        <label htmlFor="password">
-          Password:
-          <input
+          <TextField
             type="password"
             name="password"
-            required
+            label="Password"
+            style={inputStyle}
+            InputLabelProps={{style: { color: '#00acb0' },}}
             value={password}
+            required
             onChange={(event) => setPassword(event.target.value)}
           />
-        </label>
       </div>
       <div>
-        <input className="btn" type="submit" name="submit" value="Log In" />
+        <Button 
+          color='main'
+          variant='contained' 
+          className="btn" 
+          type="submit" 
+          name="submit"
+          style={buttonStyle} 
+          >Login</Button>
+        
       </div>
+      </ThemeProvider>
     </form>
   );
 }
