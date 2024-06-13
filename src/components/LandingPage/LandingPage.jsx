@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './LandingPage.css';
 import { Chessboard } from 'react-chessboard';
+import { Chess } from "chess.js";
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -30,6 +31,37 @@ function LandingPage() {
     color: 'white',
   }
 
+  const [game, setGame] = useState(new Chess());
+
+  function makeAMove(move) {
+    try {
+    game.move(move);
+    setGame(new Chess(game.fen()))
+    } catch(error) {
+      console.log('error making random move', error)
+    }
+  }
+
+  function makeRandomMove() {
+    const possibleMoves = game.moves();
+    if (game.isGameOver() || game.isDraw() || possibleMoves.length === 0)
+      return; // exit if the game is over
+    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+    makeAMove(possibleMoves[randomIndex]);
+  }
+
+  function onDrop(sourceSquare, targetSquare) {
+    const move = makeAMove({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: "q", 
+    });
+
+    // illegal move
+    setTimeout(makeRandomMove, 200);
+    return true;
+  }
+
   return (
     <div className="container">
 
@@ -41,6 +73,8 @@ function LandingPage() {
           <div className="chessGrid">
             <div className="board">
               <Chessboard
+                position={game.fen()}
+                onPieceDrop={onDrop}
                 customDarkSquareStyle={{backgroundColor: '#4b464f'}}
                 customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
               />
