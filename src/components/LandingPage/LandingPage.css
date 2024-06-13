@@ -78,3 +78,14 @@ Grid
   flex-basis: 100%;
   max-width: 100%;
 }
+
+.chessGrid {
+  display: grid;
+  grid-template-columns: 1fr 500px 1fr;
+  grid-template-rows: 1fr 500px 1fr;
+}
+
+.board {
+  grid-row: 2;
+  grid-column: 2;
+}

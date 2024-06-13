@@ -9,8 +9,18 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { Chessboard } from 'react-chessboard';
-import { v4 as uuidv4 } from 'uuid';
 import './Menu.css';
+
+// To change the color of the join room button
+const { palette } = createTheme();
+const { augmentColor } = palette;
+const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+
+const theme = createTheme({
+  palette: {
+      main: createColor('#00acb0'),
+  },
+});
 
 function Menu() {
   const dispatch = useDispatch();
@@ -113,17 +123,6 @@ function Menu() {
     }
   };
 
-  // To change the color of the join room button
-  const { palette } = createTheme();
-  const { augmentColor } = palette;
-  const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-  const theme = createTheme({
-    palette: {
-        main: createColor('#00acb0'),
-    },
-  });
-
   const buttonStyle = {
     color: 'white',
     height: '55px',
@@ -137,7 +136,7 @@ function Menu() {
 
   return (
     <div className="container">
-      <p>Welcome {user.username}!</p>
+      <p>Welcome, {user.username}!</p>
       <div id='form'>
       <ThemeProvider theme={theme}>
         <form onSubmit={joinRoomBtn}>
