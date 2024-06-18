@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './LandingPage.css';
 import { Chessboard } from 'react-chessboard';
+import { Chess } from "chess.js";
 import { Button } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material';
 
@@ -29,6 +30,29 @@ function LandingPage() {
   const buttonStyle = {
     color: 'white',
   }
+  // Chess logic for random vs random chessboard
+  const [game, setGame] = useState(new Chess());
+
+  function makeAMove(move) {
+    try {
+    game.move(move);
+    setGame(new Chess(game.fen()))
+    } catch(error) {
+      console.log('error making move', error)
+    }
+  }
+
+  function makeRandomMove() {
+    const possibleMoves = game.moves();
+    if (game.isGameOver() || game.isDraw() || possibleMoves.length === 0)
+      return; 
+    const randomIndex = Math.floor(Math.random() * possibleMoves.length);
+    makeAMove(possibleMoves[randomIndex]);
+  }
+
+  useEffect(() => {
+    setTimeout(makeRandomMove, 1000)
+  }, [game])
 
   return (
     <div className="container">
@@ -41,10 +65,12 @@ function LandingPage() {
           <div className="chessGrid">
             <div className="board">
               <Chessboard
+                position={game.fen()}
+                draggable={false}
                 customDarkSquareStyle={{backgroundColor: '#4b464f'}}
                 customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
               />
-            </div>
+            </div> 
           </div>         
         </div>
         <div className="grid-col grid-col_4">
