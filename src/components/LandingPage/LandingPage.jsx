@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import './LandingPage.css';
 import { Chessboard } from 'react-chessboard';
@@ -30,7 +30,7 @@ function LandingPage() {
   const buttonStyle = {
     color: 'white',
   }
-
+  // Chess logic for random vs random chessboard
   const [game, setGame] = useState(new Chess());
 
   function makeAMove(move) {
@@ -38,29 +38,21 @@ function LandingPage() {
     game.move(move);
     setGame(new Chess(game.fen()))
     } catch(error) {
-      console.log('error making random move', error)
+      console.log('error making move', error)
     }
   }
 
   function makeRandomMove() {
     const possibleMoves = game.moves();
     if (game.isGameOver() || game.isDraw() || possibleMoves.length === 0)
-      return; // exit if the game is over
+      return; 
     const randomIndex = Math.floor(Math.random() * possibleMoves.length);
     makeAMove(possibleMoves[randomIndex]);
   }
 
-  function onDrop(sourceSquare, targetSquare) {
-    const move = makeAMove({
-      from: sourceSquare,
-      to: targetSquare,
-      promotion: "q", 
-    });
-
-    // illegal move
-    setTimeout(makeRandomMove, 200);
-    return true;
-  }
+  useEffect(() => {
+    setTimeout(makeRandomMove, 1000)
+  }, [game])
 
   return (
     <div className="container">
@@ -74,11 +66,10 @@ function LandingPage() {
             <div className="board">
               <Chessboard
                 position={game.fen()}
-                onPieceDrop={onDrop}
+                draggable={false}
                 customDarkSquareStyle={{backgroundColor: '#4b464f'}}
                 customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
               />
-              <h4>Test out the chessboard! The computer moves are randomized</h4>
             </div> 
           </div>         
         </div>
