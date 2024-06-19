@@ -20,6 +20,7 @@ import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import ChessGame from '../ChessGame/ChessGame';
+import GameHistory from '../GameHistory/GameHistory';
 
 import './App.css';
 
@@ -99,6 +100,14 @@ function App() {
           <Route path="/game/:id">
             {user.id ? 
             <ChessGame socket={socket}/>
+            :
+            <LoginPage />}
+            
+          </Route>
+
+          <Route path="/history">
+            {user.id ? 
+            <GameHistory />
             :
             <LoginPage />}
             
