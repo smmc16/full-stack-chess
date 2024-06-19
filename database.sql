@@ -6,11 +6,13 @@ CREATE TABLE "user" (
 
 CREATE TABLE "games" (
 	"id" SERIAL PRIMARY KEY,
+	"in_progress" BOOLEAN DEFAULT true,
 	"room_id" VARCHAR (80) UNIQUE NOT NULL,
 	"white" INT REFERENCES "user",
 	"black" INT REFERENCES "user",
 	"position" VARCHAR(1000) DEFAULT 'start',
-	"turn" VARCHAR(1) DEFAULT 'w'
+	"turn" VARCHAR(1) DEFAULT 'w',
+	"outcome" VARCHAR(50)
 	);
 
 CREATE TABLE "chat" (
