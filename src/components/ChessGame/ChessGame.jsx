@@ -72,13 +72,13 @@ function ChessGame({socket}) {
       promotion: "q", 
     };
     try {
-      game.move(move);
-          setGame(new Chess(game.fen()))
-          putPosition();
-          console.log(game.fen())
-          socket.emit('makeMove', move, id);
-          
-          return console.log('valid move');
+        game.move(move);
+        setGame(new Chess(game.fen()))
+        putPosition();
+        console.log(game.fen())
+        socket.emit('makeMove', move, id);
+        
+        return console.log('valid move');
       } catch (error) { 
         return console.log('error making move in onDrop', error)}
         
@@ -120,32 +120,46 @@ function ChessGame({socket}) {
     })
   };
 
+  let historyObject = {}
+
    // Deletes game from db once it's over
    function deleteGame() {
+
+    axios.put(`/api/game/gameover/${id}`, historyObject).then((response) => {
+      console.log('history updated')
+    }).catch(error => {
+      console.log('Error in PUT /gameover', error);
+    })
+
     axios.delete(`/api/chat/gameover/${id}`).then((response) => {
       console.log('chats deleted')
     }).catch(error => {
       console.log('Error in DELETE /chat/gameover', error);
     });
-    axios.delete(`/api/game/gameover/${id}`).then((response) => {
-      console.log('game deleted')
-    }).catch(error => {
-      console.log('Error in DELETE /game/gameover', error);
-    });
+    // axios.delete(`/api/game/gameover/${id}`).then((response) => {
+    //   console.log('game deleted')
+    // }).catch(error => {
+    //   console.log('Error in DELETE /game/gameover', error);
+    // });
   };
 
   // Displays information on why the game is over
   function gameOver () {
     if (game && game.isGameOver() && game.turn() === "w" && !game.isDraw() && !game.isStalemate() && !game.isThreefoldRepetition()){
+      historyObject.outcome = "Black"
       return `Game Over: Black is the winner!`;
     } else if (game && game.isGameOver() && game.turn() === "b" && !game.isDraw() && !game.isStalemate() && !game.isThreefoldRepetition()){
+      historyObject.outcome = "White"
       return `Game Over: White is the winner!`;
     } else if (game && game.isGameOver() && game.isDraw()){
+      historyObject.outcome = "Draw"
       return `Game Over: It's a draw!`;
     } else if (game && game.isGameOver() && game.isStalemate()){
+      historyObject.outcome = "Stalemate"
       return `Game Over: It's a stalemate!`;
     } else if (game && game.isGameOver() && game.isThreefoldRepetition()){
-      return `Game Over: Threefold repitition, the same position has occured 3 times during the game`;
+      historyObject.outcome = "Threefold Repetition"
+      return `Game Over: Threefold repetition, the same position has occured 3 times during the game`;
     } else {
       return '';
     }
@@ -172,7 +186,6 @@ function ChessGame({socket}) {
           customBoardStyle={{ borderRadius: '5px', boxShadow: '0 5px 15px rgba(0, 0, 0, 0.5 )'}} 
           customDarkSquareStyle={{backgroundColor: '#4b464f'}}
           customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
-          
           />
         </div>
         

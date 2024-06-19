@@ -68,7 +68,7 @@ router.put('/secondplayer', (req, res) => {
 
 router.get('/userRooms/:id', (req, res) => {
   queryText = `
-  SELECT * FROM "games" WHERE "black" = $1 OR "white" = $1 ORDER BY "id";
+  SELECT * FROM "games" WHERE "in_progress" = true AND ("black" = $1 OR "white" = $1) ORDER BY "id";
   `
   pool.query(queryText, [req.params.id])
   .then((dbRes) => {
@@ -119,6 +119,34 @@ router.get('/targetID/:id', (req, res) => {
   })
   .catch((dbErr) => {
     console.log(`Error targetting id`, dbErr);
+    res.sendStatus(500);
+  });
+});
+
+router.put('/gameover/:id', (req, res) => {
+  queryText = `
+  UPDATE "games" SET "in_progress" = false, "outcome" = $1 WHERE "room_id" = $2;
+  `
+  pool.query(queryText, [req.body.outcome, req.params.id])
+  .then((dbRes) => {
+    res.status(200).send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error updating game history`, dbErr);
+    res.sendStatus(500);
+  });
+})
+
+router.get('/history/:id', (req, res) => {
+  queryText = `
+  SELECT * FROM "games" WHERE "in_progress" = false AND ("black" = $1 OR "white" = $1) ORDER BY "id";
+  `
+  pool.query(queryText, [req.params.id])
+  .then((dbRes) => {
+    res.status(200).send(dbRes.rows);
+  })
+  .catch((dbErr) => {
+    console.log(`Error getting history`, dbErr);
     res.sendStatus(500);
   });
 });

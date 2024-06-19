@@ -27,6 +27,9 @@ function Nav() {
             <Link className="navLink" to="/menu">
               Menu
             </Link>
+            <Link className="navLink" to="/history">
+              Game History
+            </Link>
 
             <LogOutButton className="navLink" />
           </>
