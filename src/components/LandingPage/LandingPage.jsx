@@ -66,7 +66,7 @@ function LandingPage() {
             <div className="board">
               <Chessboard
                 position={game.fen()}
-                draggable={false}
+                arePiecesDraggable={false}
                 customDarkSquareStyle={{backgroundColor: '#4b464f'}}
                 customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
               />

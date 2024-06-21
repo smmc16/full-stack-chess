@@ -47,7 +47,7 @@ function ChessGame({socket}) {
       setTimeout(() => {
         deleteGame();
         history.push('/menu');
-      }, 60.0 * 1000);
+      }, 30.0 * 1000);
       
     }
   }, [game])
