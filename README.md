@@ -1,12 +1,6 @@
-# Prime Solo Project - Starting Repo
+# Full Stack Chess
 
 This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
-
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
-
-## Use the Template for This Repository (Don't Clone)
-
-- Don't Fork or Clone. Instead, click the `Use this Template` button, and make a copy to your personal account. Make the project `PUBLIC`!
 
 ## Prerequisites
 
@@ -18,7 +12,7 @@ Before you get started, make sure you have the following software installed on y
 
 ## Create Database and Table
 
-Create a new database called `prime_app` and create a `user` table:
+Create a new database called `full-stack-chess` and create `user`,`games`, and `chat` tables:
 
 ```SQL
 CREATE TABLE "user" (
@@ -28,12 +22,38 @@ CREATE TABLE "user" (
 );
 ```
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`.
+```SQL
+CREATE TABLE "games" (
+	"id" SERIAL PRIMARY KEY,
+	"in_progress" BOOLEAN DEFAULT true,
+	"room_id" VARCHAR (80) UNIQUE NOT NULL,
+	"white" INT REFERENCES "user",
+	"black" INT REFERENCES "user",
+	"position" VARCHAR(1000) DEFAULT 'start',
+	"turn" VARCHAR(1) DEFAULT 'w',
+	"outcome" VARCHAR(50)
+	);
+```
+
+```SQL
+CREATE TABLE "chat" (
+	"id" SERIAL PRIMARY KEY,
+	"room_id" VARCHAR(80),
+	"user" VARCHAR(80),
+	"message" VARCHAR(500)
+	);
+```
+
+Run this after setting up the tables and registering an account: 
+
+```SQL
+INSERT INTO "games" (room_id, black) VALUES ('room', 1);
+```
+
 
 ## Development Setup Instructions
 
 - Run `npm install`.
-    - Be sure to take stock of `package.json` to see which dependencies you'll need to add.
 - Create a `.env` file at the root of the project and paste this line into the file:
 
 ```plaintext
