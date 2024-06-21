@@ -155,6 +155,7 @@ function Menu() {
           </Stack>
         </form>
       </ThemeProvider>
+      <p className='help'>Find a friend and decide on a room ID. It can be anything as long as both players enter the same one!</p>
       </div>
       <div id='rooms'>
       {userRooms.map((room) => 

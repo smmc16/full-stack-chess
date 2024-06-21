@@ -21,3 +21,11 @@
     cursor: pointer;
     background-color: aliceblue;
 }
+
+.help {
+    font-size: 8;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
