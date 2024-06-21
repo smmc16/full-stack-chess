@@ -38,7 +38,7 @@ const ioPORT = process.env.ioPORT || 5002;
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: ioPORT,
       methods: ["GET", "POST", "UPDATE", "DELETE"]
     }
   });  
