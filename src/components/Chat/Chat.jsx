@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { ThemeProvider } from '@mui/material';
-import theme from '../../theme/theme';
+import theme from '../../theme/theme.js';
 import axios from 'axios';
 import './Chat.css';
 

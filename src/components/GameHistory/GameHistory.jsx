@@ -3,20 +3,10 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 import { Chessboard } from 'react-chessboard';
+import theme from '../../theme/theme.js';
 import './GameHistory.css';
-
-// To change the color of the join room button
-const { palette } = createTheme();
-const { augmentColor } = palette;
-const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-const theme = createTheme({
-  palette: {
-      main: createColor('#00acb0'),
-  },
-});
 
 function GameHistory() {
   const user = useSelector((store) => store.user);

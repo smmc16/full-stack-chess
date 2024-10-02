@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { ThemeProvider } from '@mui/material';
 import { Chessboard } from 'react-chessboard';
-import theme from '../../theme/theme';
+import theme from '../../theme/theme.js';
 import './Menu.css';
 
 

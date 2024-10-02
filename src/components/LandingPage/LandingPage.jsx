@@ -5,7 +5,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess } from "chess.js";
 import { Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material';
-import theme from '../../theme/theme';
+import theme from '../../theme/theme.js';
 
 // CUSTOM COMPONENTS
 import RegisterForm from '../RegisterForm/RegisterForm';

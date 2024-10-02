@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField } from '@mui/material';
 import { ThemeProvider } from '@mui/material';
-import theme from '../../theme/theme';
+import theme from '../../theme/theme.js';
 
 function RegisterForm() {
   const [username, setUsername] = useState('');
