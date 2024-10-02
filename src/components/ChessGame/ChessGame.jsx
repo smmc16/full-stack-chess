@@ -177,7 +177,7 @@ function ChessGame({socket}) {
       {game && (
         <div id='board'>
           <Chessboard id={room.room_id}
-          boardWidth={500}
+          //boardWidth={500}
           position={game.fen()} 
           onPieceDrop={onDrop}
           arePiecesDraggable={draggable}

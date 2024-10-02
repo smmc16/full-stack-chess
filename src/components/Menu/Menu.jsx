@@ -155,12 +155,12 @@ function Menu() {
         <Card onClick={() => roomBtn(room.room_id)} className='room' key={room.id}>
           <CardContent>
             <Chessboard 
-              position={room.position} 
-              boardWidth={100} 
-              arePiecesDraggable={false}
-              boardOrientation={user.id === room.white ? 'white' : 'black'}
               customDarkSquareStyle={{backgroundColor: '#6e6a72'}}
-              customLightSquareStyle={{backgroundColor: '#d9d9d9'}} 
+              customLightSquareStyle={{backgroundColor: '#d9d9d9'}}
+              boardOrientation={user.id === room.white ? 'white' : 'black'}
+              //boardWidth={100} 
+              position={room.position} 
+              arePiecesDraggable={false}
             />
             <h4>{room.room_id}</h4>
             <p>{turnNotice(room)}</p>

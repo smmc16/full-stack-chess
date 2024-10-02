@@ -48,7 +48,7 @@ function GameHistory() {
           <CardContent>
             <Chessboard 
               position={room.position} 
-              boardWidth={100} 
+              //boardWidth={100}
               arePiecesDraggable={false}
               boardOrientation={user.id === room.white ? 'white' : 'black'}
               customDarkSquareStyle={{backgroundColor: '#6e6a72'}}
