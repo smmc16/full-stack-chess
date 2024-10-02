@@ -113,6 +113,7 @@ function Menu() {
     } else if(user.id === room.black && room.turn == 'b') {
       return `It's your turn!`
     }
+    return '';
   };
 
   const buttonStyle = {
