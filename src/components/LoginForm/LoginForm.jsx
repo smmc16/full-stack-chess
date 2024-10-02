@@ -1,19 +1,8 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import {useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material';
-
-// To change the color of the button
-const { palette } = createTheme();
-const { augmentColor } = palette;
-const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-const theme = createTheme({
-  palette: {
-      main: createColor('#00acb0'),
-  },
-});
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../../theme/theme';
 
 function LoginForm() {
   const [username, setUsername] = useState('');
@@ -61,7 +50,7 @@ function LoginForm() {
             name="username"
             label='Username'
             style={inputStyle}
-            InputLabelProps={{style: { color: '#00acb0' },}}
+            InputLabelProps={{style: { color: '#00acb0'  },}}
             value={username}
             required
             onChange={(event) => setUsername(event.target.value)}

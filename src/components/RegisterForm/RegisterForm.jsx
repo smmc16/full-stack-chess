@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, TextField } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material';
-
-// To change the color of the button
-const { palette } = createTheme();
-const { augmentColor } = palette;
-const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-const theme = createTheme({
-  palette: {
-      main: createColor('#00acb0'),
-  },
-});
+import { ThemeProvider } from '@mui/material';
+import theme from '../../theme/theme';
 
 function RegisterForm() {
   const [username, setUsername] = useState('');

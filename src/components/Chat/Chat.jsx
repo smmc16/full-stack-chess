@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+import theme from '../../theme/theme';
 import axios from 'axios';
 import './Chat.css';
 
@@ -51,18 +52,6 @@ export default function Chat ({socket}) {
           ;
         }  
       }
-
-    // To change the color of the join room button
-    const { palette } = createTheme();
-    const { augmentColor } = palette;
-    const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-    const theme = createTheme({
-        palette: {
-            main: createColor('#00acb0'),
-        },
-    });
-
         const buttonStyle = {
         color: 'white',
         height: '55px',

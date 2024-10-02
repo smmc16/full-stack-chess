@@ -4,21 +4,11 @@ import './LandingPage.css';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from "chess.js";
 import { Button } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
+import theme from '../../theme/theme';
 
 // CUSTOM COMPONENTS
 import RegisterForm from '../RegisterForm/RegisterForm';
-
-// To change the color of the button
-const { palette } = createTheme();
-const { augmentColor } = palette;
-const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
-
-const theme = createTheme({
-  palette: {
-      main: createColor('#00acb0'),
-  },
-});
 
 function LandingPage() {
   const history = useHistory();
